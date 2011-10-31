@@ -1,7 +1,9 @@
 package se.kingharvest.infrastructure.property;
 
-public interface IProperty<T> {
+import java.io.Serializable;
 
+public interface IProperty<T> extends Serializable
+{
 	T get();
 	void set(T value);
 }

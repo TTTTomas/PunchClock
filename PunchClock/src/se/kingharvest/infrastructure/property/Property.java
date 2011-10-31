@@ -4,6 +4,8 @@ import java.util.HashSet;
 
 public abstract class Property<T> implements IProperty<T> {
 
+	private static final long serialVersionUID = 1760400741734504549L;
+
 	transient public HashSet<IPropertyListener<T>> Listeners = new HashSet<IPropertyListener<T>>();
 	
 	T _value;
