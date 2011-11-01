@@ -2,6 +2,8 @@ package se.kingharvest.infrastructure.ui;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 import se.kingharvest.infrastructure.diagnostics.Logger;
 import se.kingharvest.infrastructure.model.IView;
@@ -15,22 +17,42 @@ import se.kingharvest.infrastructure.ui.ex.SpinnerEx;
 import se.kingharvest.infrastructure.ui.ex.TextViewEx;
 import se.kingharvest.infrastructure.ui.ex.ViewEx;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+/**
+ * This is a base class for an Activity that is paired with a view model. It also overrides a 
+ * handful of common Activity methods and implements another handful of alternative helper methods.
+ * You need to provide your subclass as a type argument to ActivityBase.
+ * @author tomasb
+ *
+ * @param <V> The view - your Activity. 
+ * @param <VM> The view model.
+ */
 @SuppressWarnings("rawtypes")
 public abstract class ActivityBase<V extends IView<?>, VM extends IViewModel> 
 	extends Activity 
-	implements ILayoutBinder, IView<VM>, INavigator
+	implements ILayoutBinder, IView<VM>, INavigator, IDialogManager
 {	
 	private final String LOG_TAG = getClass().getSimpleName();
 	
 	protected VM _viewModel;
 
+	/** The set of dialogs this Activity manages. */
+	protected Set<Dialog> _dialogs;
+
 	/** Contains all methods annotated with OnActivityResult if the subclasser has not implemented onActivityResult. */
 	protected HashMap<Integer, Method> _resultMethods;
 	
+	/**
+	 * onCreate is called when the activity is created.
+	 * It sets the content view (@see getContentView()) and creates an instance
+	 * of the view model (@see createViewModel()) if necessary. Then it calls 
+	 * bindView() (@see bindView()). 
+	 * Subclassers will probably not need to override this method. 
+	 */
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(getContentView());
@@ -46,6 +68,13 @@ public abstract class ActivityBase<V extends IView<?>, VM extends IViewModel>
 	    bindView();
 	}
 	
+	/**
+	 * onSaveInstanceState saves the view model to the stored state.
+	 * Store any data you want to be saved on state change (such as device
+	 * rotation or activity freeze) in the view model, and it will automatically
+	 * be saved and restored.
+	 * Subclassers will probably not need to override this method. 
+	 */
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		
@@ -55,6 +84,13 @@ public abstract class ActivityBase<V extends IView<?>, VM extends IViewModel>
 		outState.putParcelable(this.getClass().getSimpleName() + "_VIEWMODEL", viewModel);
 	}
 	
+	/**
+	 * onRestoreInstanceState restores the view model from the stored state.
+	 * Store any data you want to be saved on state change (such as device
+	 * rotation or activity freeze) in the view model, and it will automatically
+	 * be saved and restored.
+	 * Subclassers will probably not need to override this method. 
+	 */
 	@SuppressWarnings({ "unchecked" })
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
@@ -66,6 +102,14 @@ public abstract class ActivityBase<V extends IView<?>, VM extends IViewModel>
 		setViewModel(viewModel);
 	}
 
+	/**
+	 * onActivityResult receives the result from any activity called from this activity.
+	 * It then dispatches the result to any method annotated with OnActivityResult(requestCode).
+	 * Therefore, to receive results, create a method with the signature method(int result, Intent data)
+	 * and annotate it with OnActivityResult(requestCode). It will get results dispatched to it from
+	 * here.
+	 * Subclassers will probably not need to override this method. 
+	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -90,6 +134,24 @@ public abstract class ActivityBase<V extends IView<?>, VM extends IViewModel>
         }
 	}
 
+	/**
+	 * onActivityResult is called when the activity is destroyed.
+	 * Here all dialogs managed by this activity are dismissed to
+	 * prevent any leaked dialogs.
+	 * @see Activity#onDestroy
+	 */
+	@Override
+	protected void onDestroy() {
+		if(_dialogs != null)
+		{
+			for (Dialog dialog : _dialogs) {
+				dialog.dismiss();
+			}
+			_dialogs.clear();
+		}
+		super.onDestroy();
+	}
+	
 	/* IView */
 
 	public void setViewModel(VM viewModel) {
@@ -121,6 +183,19 @@ public abstract class ActivityBase<V extends IView<?>, VM extends IViewModel>
 
 	public View.OnClickListener onClick(int id){
 		return LayoutBinder.getOnClick(this, id);
+	}
+	
+	/* IDialogManager */
+
+	/**
+	 * Adds a dialog to be managed by this activity.
+	 * Managed dialogs will be dismissed when the activity gets destroyed.
+	 */
+	public void manageDialog(Dialog dialog) {
+		if(_dialogs == null)
+			_dialogs = new HashSet<Dialog>();
+		
+		_dialogs.add(dialog);
 	}
 	
 	/* INavigator */

@@ -1,9 +1,11 @@
 package se.kingharvest.punchclock;
 
 import se.kingharvest.infrastructure.ui.ActivityBase;
+import se.kingharvest.infrastructure.ui.DialogBase;
 import se.kingharvest.infrastructure.ui.annotation.OnActivityResult;
 import se.kingharvest.infrastructure.ui.annotation.OnClick;
 import se.kingharvest.punchclock.pages.EntriesPage;
+import android.app.Dialog;
 import android.content.Intent;
 import android.view.View;
 
@@ -16,7 +18,7 @@ public class PunchClockActivity extends ActivityBase<PunchClockActivity, PunchCl
 	public int getContentView() {
 		return R.layout.main;
 	}
-
+	
 	public PunchClockViewModel createViewModel() {
 		return new PunchClockViewModel(this);
 	}
@@ -43,6 +45,10 @@ public class PunchClockActivity extends ActivityBase<PunchClockActivity, PunchCl
 	public void punch(View button)
 	{
 		_viewModel.setCounter(_viewModel.getCounter()+1);
+		
+		Dialog d = new DialogBase(this);
+		d.setTitle("Hello");
+		d.show();
 	}
 
 	@OnClick(R.id.punchclock_go_to_entries)

@@ -4,15 +4,16 @@ import se.kingharvest.infrastructure.ui.binder.ILayoutBinder;
 import se.kingharvest.infrastructure.ui.binder.LayoutBinder;
 import se.kingharvest.infrastructure.ui.ex.ButtonEx;
 import se.kingharvest.infrastructure.ui.ex.SpinnerEx;
+import se.kingharvest.infrastructure.ui.ex.TextViewEx;
 import se.kingharvest.infrastructure.ui.ex.ViewEx;
 import android.app.Dialog;
-import android.content.Context;
 import android.view.View;
 
-public abstract class DialogBase extends Dialog implements ILayoutBinder{
+public  class DialogBase extends Dialog implements ILayoutBinder{
 	
-	public DialogBase(Context context) {
+	public DialogBase(ActivityBase<?,?> context) {
 		super(context);
+		context.manageDialog(this);
 	}
 
 	public ViewEx getView(int id) {
@@ -36,5 +37,15 @@ public abstract class DialogBase extends Dialog implements ILayoutBinder{
 	public View.OnClickListener onClick(int id)
 	{
 		return LayoutBinder.getOnClick(this, id);
+	}
+
+	public int getContentView() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public TextViewEx getTextView(int id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
