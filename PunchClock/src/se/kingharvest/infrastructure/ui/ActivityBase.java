@@ -16,11 +16,13 @@ import se.kingharvest.infrastructure.ui.ex.ButtonEx;
 import se.kingharvest.infrastructure.ui.ex.SpinnerEx;
 import se.kingharvest.infrastructure.ui.ex.TextViewEx;
 import se.kingharvest.infrastructure.ui.ex.ViewEx;
+import se.kingharvest.infrastructure.ui.navigation.INavigator;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 
 /**
  * This is a base class for an Activity that is paired with a view model. It also overrides a 
@@ -64,6 +66,9 @@ public abstract class ActivityBase<V extends IView<?>, VM extends IViewModel>
         } else {
         	Logger.write(LOG_TAG, "onCreate, restoring. ");
         }
+		
+		if(getIntent().getExtras() != null)
+        	Logger.write(LOG_TAG, "onCreate, getting parameters. ");
 		
 	    bindView();
 	}
@@ -152,6 +157,16 @@ public abstract class ActivityBase<V extends IView<?>, VM extends IViewModel>
 		super.onDestroy();
 	}
 	
+	/**
+	 * Returns the root layout of this Activity.
+	 * @return
+	 */
+	public ViewGroup getLayout()
+	{
+		ViewGroup layout = ((ViewGroup)findViewById(getContentView()));
+		return layout;
+	}
+
 	/* IView */
 
 	public void setViewModel(VM viewModel) {
@@ -215,4 +230,25 @@ public abstract class ActivityBase<V extends IView<?>, VM extends IViewModel>
 		setResult(resultCode);
 		finish();
 	}
+
+	public <A extends Activity, A1> void navigateTo(Class<A> pageType, A1 arg1)
+	{
+        Intent intent = new Intent(this, pageType);
+		intent.putExtra("id", 5);
+        startActivity(intent);
+//		Intent i = new Intent(this, TheNextActivity.class);
+//		i.putExtra("id", id);
+//		startActivity(i);
+//		Inside the onCreate() of the activity you call :
+//
+//		Bundle b = getIntent().getExtras();
+//		int id = b.getInt("id");
+//		
+//		Intent newIntent = new Intent(this.getApplicationContext(), ActivityClass2.class);
+//		newIntent.putExtras(bundle);
+//		startActivityForResult(newIntent, 0);		
+	}
+	
+	
+	
 }

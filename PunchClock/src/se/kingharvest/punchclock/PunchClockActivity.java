@@ -25,15 +25,18 @@ public class PunchClockActivity extends ActivityBase<PunchClockActivity, PunchCl
 	}
 
 	public void bindView()
-    {
+    {		
         getButton(R.id.punchclock_button)
-        	.setOnClick(onClick(R.id.punchclock_button));
+    		.bindOnClick(this);
 
         getButton(R.id.punchclock_go_to_entries)
-        	.setOnClick(onClick(R.id.punchclock_go_to_entries));
+    		.bindOnClick(this);
+
+        getButton(R.id.punchclock_go_to_entries_with_arguments)
+    		.bindOnClick(this);
 
         getButton(R.id.punchclock_show_dialog_button)
-        	.setOnClick(onClick(R.id.punchclock_show_dialog_button));
+        	.bindOnClick(this);
     }
 
 	public void bindViewModel() 
@@ -101,6 +104,12 @@ public class PunchClockActivity extends ActivityBase<PunchClockActivity, PunchCl
 		navigateForResult(EntriesPage.class, EntriesPage.SHOW_ENTRIES);
 	}
 	
+	@OnClick(R.id.punchclock_go_to_entries_with_arguments)
+	public void goToEntriesWithArguments(View button)
+	{
+		navigateTo(EntriesPage.class, "Hello");
+	}
+
 	@OnActivityResult(EntriesPage.SHOW_ENTRIES)
 	public void returnFromEntries(int resultCode, Intent result)
 	{

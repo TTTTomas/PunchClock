@@ -1,6 +1,7 @@
 package se.kingharvest.infrastructure.ui.ex;
 
 import se.kingharvest.infrastructure.system.MethodDelegate;
+import se.kingharvest.infrastructure.ui.binder.LayoutBinder;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -61,6 +62,16 @@ public class ButtonEx extends ViewExBase<Button, ButtonEx> {
 				clickMethod.call(v);
 			}
 		});
+		return this;
+	}
+
+//	public ButtonEx bindOnClick() {
+//		setOnClick(LayoutBinder.getOnClick(_context, _view.getId()));
+//		return this;
+//	}
+
+	public ButtonEx bindOnClick(Object obj) {
+		setOnClick(LayoutBinder.getOnClick(obj, _view.getId()));
 		return this;
 	}
 }

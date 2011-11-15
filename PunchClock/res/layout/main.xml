@@ -11,6 +11,14 @@
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content"
 	/>
+
+<Button 
+	android:text="Go to entries with arguments" 
+	android:id="@+id/punchclock_go_to_entries_with_arguments" 
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content"
+	/>
+
 <Button 
 	android:text="Counter +1" 
 	android:id="@+id/punchclock_button" 

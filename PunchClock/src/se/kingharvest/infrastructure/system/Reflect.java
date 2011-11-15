@@ -3,6 +3,7 @@ package se.kingharvest.infrastructure.system;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 /**
  * Various reflection based utility methods.
@@ -97,5 +98,31 @@ public class Reflect {
 			throw new ReflectException(e.getMessage(), e);
 		}
 		return instance;
+	}
+
+	public static boolean matches(Method m, Class<?> ... params) {
+		return matches(m, null, params);
+	}
+	
+	public static boolean matches(Method m, Class<?> returnType, Class<?> ... params) {
+		
+		if((m.getReturnType() == null && returnType != null) 
+		|| (m.getReturnType() != null && returnType == null)
+		|| (m.getReturnType() != null && returnType != null && !m.getReturnType().equals(returnType)))
+			return false;
+
+		// Here we know that the return type matches. 
+
+		return Arrays.equals(m.getParameterTypes(), params);
+		
+//		Class<?>[] methodParams = m.getParameterTypes();
+//		if((params == null && methodParams != null)
+//		|| (params != null && methodParams == null)
+//		|| (params != null && methodParams != null && params.length != methodParams.length))
+//			return false;
+//
+//		// Here we know that the parameters are same size non null arrays.
+//		// Everything passed.
+//		return true;
 	}
 }

@@ -1,4 +1,4 @@
-package se.kingharvest.infrastructure.ui;
+package se.kingharvest.infrastructure.ui.navigation;
 
 import android.app.Activity;
 
@@ -9,5 +9,6 @@ public interface INavigator {
 	<A extends Activity> void navigateForResult(Class<A> pageType, int requestCode);
 
 	void finishWithResult(int result);
-	//<A extends Activity, A1> void navigateTo(A1 arg1, Class<A> pageType);
+
+	<A extends Activity, A1> void navigateTo(Class<A> pageType, A1 arg1);
 }
