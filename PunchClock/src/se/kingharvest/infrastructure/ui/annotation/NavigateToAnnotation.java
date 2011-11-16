@@ -2,9 +2,6 @@ package se.kingharvest.infrastructure.ui.annotation;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-
-import se.kingharvest.infrastructure.system.Reflect;
 
 public class NavigateToAnnotation {
 
@@ -15,7 +12,7 @@ public class NavigateToAnnotation {
 	 * @param paramTypes
 	 * @return
 	 */
-	public static Method getAnnotatedMethod(Object obj, int id, Class<?> ... paramTypes)
+	public static Method getAnnotatedMethod(Object obj, int id)
 	{
 		Method[] methods = obj.getClass().getDeclaredMethods();
 		for (int i = 0; i < methods.length; i++) {
@@ -26,12 +23,8 @@ public class NavigateToAnnotation {
 			{
 				if(((NavigateTo)a).value() == id)
 				{
-					if(Reflect.matches(m, paramTypes))
-					{
-						m.setAccessible(true);
-						return m;
-					}
-					throw new IllegalArgumentException("Annotated method " + m.toString() + " with annotation " + a.toString() + " does not match parameters " + Arrays.toString(paramTypes) + ".");
+					m.setAccessible(true);
+					return m;
 				}
 			}
 		}

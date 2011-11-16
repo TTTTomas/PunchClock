@@ -107,7 +107,7 @@ public class PunchClockActivity extends ActivityBase<PunchClockActivity, PunchCl
 	@OnClick(R.id.punchclock_go_to_entries_with_arguments)
 	public void goToEntriesWithArguments(View button)
 	{
-		navigateTo(EntriesPage.class, "Hello");
+		navigateTo(EntriesPage.class, EntriesPage.startWithArguments, "Hello");
 	}
 
 	@OnActivityResult(EntriesPage.SHOW_ENTRIES)

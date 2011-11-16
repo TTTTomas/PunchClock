@@ -17,6 +17,7 @@ import se.kingharvest.infrastructure.ui.ex.SpinnerEx;
 import se.kingharvest.infrastructure.ui.ex.TextViewEx;
 import se.kingharvest.infrastructure.ui.ex.ViewEx;
 import se.kingharvest.infrastructure.ui.navigation.INavigator;
+import se.kingharvest.infrastructure.ui.navigation.Navigator;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
@@ -37,11 +38,11 @@ import android.view.ViewGroup;
 public abstract class ActivityBase<V extends IView<?>, VM extends IViewModel> 
 	extends Activity 
 	implements ILayoutBinder, IView<VM>, INavigator, IDialogManager
-{	
+{
 	private final String LOG_TAG = getClass().getSimpleName();
 	
 	protected VM _viewModel;
-
+	
 	/** The set of dialogs this Activity manages. */
 	protected Set<Dialog> _dialogs;
 
@@ -231,24 +232,8 @@ public abstract class ActivityBase<V extends IView<?>, VM extends IViewModel>
 		finish();
 	}
 
-	public <A extends Activity, A1> void navigateTo(Class<A> pageType, A1 arg1)
+	public <A extends Activity, A1> void navigateTo(Class<A> targetClass, int targetMethod, A1 arg1)
 	{
-        Intent intent = new Intent(this, pageType);
-		intent.putExtra("id", 5);
-        startActivity(intent);
-//		Intent i = new Intent(this, TheNextActivity.class);
-//		i.putExtra("id", id);
-//		startActivity(i);
-//		Inside the onCreate() of the activity you call :
-//
-//		Bundle b = getIntent().getExtras();
-//		int id = b.getInt("id");
-//		
-//		Intent newIntent = new Intent(this.getApplicationContext(), ActivityClass2.class);
-//		newIntent.putExtras(bundle);
-//		startActivityForResult(newIntent, 0);		
+		Navigator.navigateTo(this, targetClass, targetMethod, arg1);
 	}
-	
-	
-	
 }

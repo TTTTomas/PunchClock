@@ -3,7 +3,6 @@ package se.kingharvest.infrastructure.system;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 
 /**
  * Various reflection based utility methods.
@@ -100,20 +99,84 @@ public class Reflect {
 		return instance;
 	}
 
-	public static boolean matches(Method m, Class<?> ... params) {
-		return matches(m, null, params);
+	public static boolean isInteger(Class<?> type) {
+		return type.equals(Integer.class) || type.equals(int.class);
 	}
-	
-	public static boolean matches(Method m, Class<?> returnType, Class<?> ... params) {
-		
-		if((m.getReturnType() == null && returnType != null) 
-		|| (m.getReturnType() != null && returnType == null)
-		|| (m.getReturnType() != null && returnType != null && !m.getReturnType().equals(returnType)))
-			return false;
 
-		// Here we know that the return type matches. 
+	public static boolean isDouble(Class<?> type) {
+		return type.equals(Double.class) || type.equals(double.class);
+	}
 
-		return Arrays.equals(m.getParameterTypes(), params);
+	public static boolean isString(Class<?> type) {
+		return type.equals(String.class);
+	}
+
+	public static boolean isBoolean(Class<?> type) {
+		return type.equals(Boolean.class) || type.equals(boolean.class);
+	}
+
+	public static boolean isIntegerArray(Class<?> type) {
+		return type.equals(Integer[].class) || type.equals(int[].class);
+	}
+
+	public static boolean isDoubleArray(Class<?> type) {
+		return type.equals(Double[].class) || type.equals(double[].class);
+	}
+
+	public static boolean isStringArray(Class<?> type) {
+		return type.equals(String.class);
+	}
+
+	public static boolean isBooleanArray(Class<?> type) {
+		return type.equals(Boolean[].class) || type.equals(boolean[].class);
+	}
+
+	public static boolean isInteger(String type) {
+		return type.equals(Integer.class.getSimpleName()) || type.equals(int.class.getSimpleName());
+	}
+
+	public static boolean isDouble(String type) {
+		return type.equals(Double.class.getSimpleName()) || type.equals(double.class.getSimpleName());
+	}
+
+	public static boolean isString(String type) {
+		return type.equals(String.class.getSimpleName());
+	}
+
+	public static boolean isBoolean(String type) {
+		return type.equals(Boolean.class.getSimpleName()) || type.equals(boolean.class.getSimpleName());
+	}
+
+	public static boolean isIntegerArray(String type) {
+		return type.equals(Integer[].class.getSimpleName()) || type.equals(int[].class.getSimpleName());
+	}
+
+	public static boolean isDoubleArray(String type) {
+		return type.equals(Double[].class.getSimpleName()) || type.equals(double[].class.getSimpleName());
+	}
+
+	public static boolean isStringArray(String type) {
+		return type.equals(String[].class.getSimpleName());
+	}
+
+	public static boolean isBooleanArray(String type) {
+		return type.equals(Boolean[].class.getSimpleName()) || type.equals(boolean[].class.getSimpleName());
+	}
+
+//	public static boolean matches(Method m, String ... params) {
+//		return matches(m, null, params);
+//	}
+//	
+//	public static boolean matches(Method m, String returnType, String ... params) {
+//		
+//		if((m.getReturnType() == null && returnType != null) 
+//		|| (m.getReturnType() != null && returnType == null)
+//		|| (m.getReturnType() != null && returnType != null && !m.getReturnType().getSimpleName().equals(returnType)))
+//			return false;
+//
+//		// Here we know that the return type matches. 
+//
+//		return Arrays.equals(m.getParameterTypes(), params);
 		
 //		Class<?>[] methodParams = m.getParameterTypes();
 //		if((params == null && methodParams != null)
@@ -124,5 +187,5 @@ public class Reflect {
 //		// Here we know that the parameters are same size non null arrays.
 //		// Everything passed.
 //		return true;
-	}
+//	}
 }
