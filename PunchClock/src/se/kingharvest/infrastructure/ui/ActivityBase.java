@@ -69,7 +69,10 @@ public abstract class ActivityBase<V extends IView<?>, VM extends IViewModel>
         }
 		
 		if(getIntent().getExtras() != null)
+		{
         	Logger.write(LOG_TAG, "onCreate, getting parameters. ");
+        	Navigator.callNavigationTarget(this);
+		}
 		
 	    bindView();
 	}
@@ -232,8 +235,38 @@ public abstract class ActivityBase<V extends IView<?>, VM extends IViewModel>
 		finish();
 	}
 
+	public <A extends Activity> void navigateTo(Class<A> targetClass, int targetMethod, Object ... args)
+	{
+		Navigator.navigateTo(this, targetClass, targetMethod, args);
+	}
+
 	public <A extends Activity, A1> void navigateTo(Class<A> targetClass, int targetMethod, A1 arg1)
 	{
 		Navigator.navigateTo(this, targetClass, targetMethod, arg1);
+	}
+
+	public <A extends Activity, A1, A2> void navigateTo(Class<A> targetClass, int targetMethod, A1 arg1, A2 arg2)
+	{
+		Navigator.navigateTo(this, targetClass, targetMethod, arg1, arg2);
+	}
+
+	public <A extends Activity, A1, A2, A3> void navigateTo(Class<A> targetClass, int targetMethod, A1 arg1, A2 arg2, A3 arg3)
+	{
+		Navigator.navigateTo(this, targetClass, targetMethod, arg1, arg2, arg3);
+	}
+
+	public <A extends Activity, A1, A2, A3, A4> void navigateTo(Class<A> targetClass, int targetMethod, A1 arg1, A2 arg2, A3 arg3, A4 arg4)
+	{
+		Navigator.navigateTo(this, targetClass, targetMethod, arg1, arg2, arg3, arg4);
+	}
+
+	public <A extends Activity, A1, A2, A3, A4, A5> void navigateTo(Class<A> targetClass, int targetMethod, A1 arg1, A2 arg2, A3 arg3, A4 arg4, A5 arg5)
+	{
+		Navigator.navigateTo(this, targetClass, targetMethod, arg1, arg2, arg3, arg4, arg5);
+	}
+
+	public <A extends Activity, A1, A2, A3, A4, A5, A6> void navigateTo(Class<A> targetClass, int targetMethod, A1 arg1, A2 arg2, A3 arg3, A4 arg4, A5 arg5, A6 arg6)
+	{
+		Navigator.navigateTo(this, targetClass, targetMethod, arg1, arg2, arg3, arg4, arg5, arg6);
 	}
 }

@@ -4,6 +4,6 @@ import se.kingharvest.infrastructure.entity.IEntity;
 
 public interface IDalFactory {
 
-	<E extends IEntity> IDal<E> getDal(Class<E> contract);
+	<E extends IEntity> ITable<E> getDal(Class<E> contract);
 	
 }

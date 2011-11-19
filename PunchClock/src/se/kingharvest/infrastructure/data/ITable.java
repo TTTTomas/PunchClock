@@ -2,7 +2,9 @@ package se.kingharvest.infrastructure.data;
 
 import se.kingharvest.infrastructure.entity.IEntity;
 
-public interface IDal<E extends IEntity> {
+public interface ITable<E extends IEntity> {
+	
+	
 	
 	E select(int id);
 

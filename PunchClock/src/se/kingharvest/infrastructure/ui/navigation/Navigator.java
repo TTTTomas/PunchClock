@@ -33,13 +33,14 @@ public class Navigator {
 		}
 	}
 	
-	public static <A extends Activity, A1> void navigateTo(Context context, Class<A> targetClass, int targetMethod, A1 arg1)
+	public static <A extends Activity> void navigateTo(Context context, Class<A> targetClass, int targetMethod, Object ... args)
 	{
         Intent intent = new Intent(context, targetClass);
         intent.putExtra(SE_KINGHARVEST_NAVIGATOR_TARGET, targetMethod);
-        intent.putExtra(SE_KINGHARVEST_NAVIGATOR_NR_OF_ARGUMENTS, 1);
-        IntentUtils.putArgumentInIntent(intent, 1, arg1);
+        intent.putExtra(SE_KINGHARVEST_NAVIGATOR_NR_OF_ARGUMENTS, args.length);
+        for (int i = 0; i < args.length; i++) {
+            IntentUtils.putArgumentInIntent(intent, i, args[i]);
+		}
         context.startActivity(intent);
 	}
-
 }

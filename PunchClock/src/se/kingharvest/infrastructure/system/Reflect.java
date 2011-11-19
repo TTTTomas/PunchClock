@@ -3,6 +3,7 @@ package se.kingharvest.infrastructure.system;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 
 /**
  * Various reflection based utility methods.
@@ -161,6 +162,16 @@ public class Reflect {
 
 	public static boolean isBooleanArray(String type) {
 		return type.equals(Boolean[].class.getSimpleName()) || type.equals(boolean[].class.getSimpleName());
+	}
+
+	/**
+	 * Returns the first generic type argument of the given class.
+	 * @param class1
+	 * @return
+	 */
+	public static Class<?> getGenericType(Class<?> clazz) {
+		Class<?> genericType = ((Class<?>) ((ParameterizedType) clazz.getGenericSuperclass()).getActualTypeArguments()[0]);
+		return genericType;
 	}
 
 //	public static boolean matches(Method m, String ... params) {

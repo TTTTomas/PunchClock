@@ -33,8 +33,8 @@ public class IntentUtils {
             intent.putExtra(argLabel, (String[])arg1);
         else if(Reflect.isBooleanArray(type))
             intent.putExtra(argLabel, (Boolean[])arg1);
-
-        throw new IllegalArgumentException("Type " + type + " is not an allowed type.");
+        else
+        	throw new IllegalArgumentException("Type " + type + " is not an allowed type.");
 	}
 
 	public static Object getArgumentFromIntent(Intent intent, int i) {
