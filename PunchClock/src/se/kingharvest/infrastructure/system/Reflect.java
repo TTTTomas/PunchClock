@@ -83,85 +83,29 @@ public class Reflect {
 		}
 	}
 
+	public static <T> T newInstance(Class<T> type)
+	{
+		T instance = null;
+		try{
+			instance = type.newInstance();
+		}
+		catch(Exception e){
+			throw new ReflectException(e.getMessage(), e);
+		}
+		return instance;
+	}
+		
+			
+	
 	public static <T> T newInstance(Constructor<T> constructor, Object arg)
 	{
 		T instance = null;
 		try {
 			instance = constructor.newInstance(arg);
-		} catch (IllegalArgumentException e) {
-			throw new ReflectException(e.getMessage(), e);
-		} catch (InstantiationException e) {
-			throw new ReflectException(e.getMessage(), e);
-		} catch (IllegalAccessException e) {
-			throw new ReflectException(e.getMessage(), e);
-		} catch (InvocationTargetException e) {
+		} catch (Exception e) {
 			throw new ReflectException(e.getMessage(), e);
 		}
 		return instance;
-	}
-
-	public static boolean isInteger(Class<?> type) {
-		return type.equals(Integer.class) || type.equals(int.class);
-	}
-
-	public static boolean isDouble(Class<?> type) {
-		return type.equals(Double.class) || type.equals(double.class);
-	}
-
-	public static boolean isString(Class<?> type) {
-		return type.equals(String.class);
-	}
-
-	public static boolean isBoolean(Class<?> type) {
-		return type.equals(Boolean.class) || type.equals(boolean.class);
-	}
-
-	public static boolean isIntegerArray(Class<?> type) {
-		return type.equals(Integer[].class) || type.equals(int[].class);
-	}
-
-	public static boolean isDoubleArray(Class<?> type) {
-		return type.equals(Double[].class) || type.equals(double[].class);
-	}
-
-	public static boolean isStringArray(Class<?> type) {
-		return type.equals(String.class);
-	}
-
-	public static boolean isBooleanArray(Class<?> type) {
-		return type.equals(Boolean[].class) || type.equals(boolean[].class);
-	}
-
-	public static boolean isInteger(String type) {
-		return type.equals(Integer.class.getSimpleName()) || type.equals(int.class.getSimpleName());
-	}
-
-	public static boolean isDouble(String type) {
-		return type.equals(Double.class.getSimpleName()) || type.equals(double.class.getSimpleName());
-	}
-
-	public static boolean isString(String type) {
-		return type.equals(String.class.getSimpleName());
-	}
-
-	public static boolean isBoolean(String type) {
-		return type.equals(Boolean.class.getSimpleName()) || type.equals(boolean.class.getSimpleName());
-	}
-
-	public static boolean isIntegerArray(String type) {
-		return type.equals(Integer[].class.getSimpleName()) || type.equals(int[].class.getSimpleName());
-	}
-
-	public static boolean isDoubleArray(String type) {
-		return type.equals(Double[].class.getSimpleName()) || type.equals(double[].class.getSimpleName());
-	}
-
-	public static boolean isStringArray(String type) {
-		return type.equals(String[].class.getSimpleName());
-	}
-
-	public static boolean isBooleanArray(String type) {
-		return type.equals(Boolean[].class.getSimpleName()) || type.equals(boolean[].class.getSimpleName());
 	}
 
 	/**
@@ -174,7 +118,98 @@ public class Reflect {
 		return genericType;
 	}
 
-//	public static boolean matches(Method m, String ... params) {
+	public static void setBoolean(String fieldName, Object object, boolean value)
+	{
+		try {
+			object.getClass().getField(fieldName).setBoolean(object, value);
+		} catch (Exception e) {
+			throw new ReflectException(e.getMessage(), e);
+		}
+	}
+
+	public static void setInteger(String fieldName, Object object, int value)
+	{
+		try {
+			object.getClass().getField(fieldName).setInt(object, value);
+		} catch (Exception e) {
+			throw new ReflectException(e.getMessage(), e);
+		}
+	}
+	
+	public static void setLong(String fieldName, Object object, long value)
+	{
+		try {
+			object.getClass().getField(fieldName).setLong(object, value);
+		} catch (Exception e) {
+			throw new ReflectException(e.getMessage(), e);
+		}
+	}
+
+	public static void setShort(String fieldName, Object object, short value)
+	{
+		try {
+			object.getClass().getField(fieldName).setShort(object, value);
+		} catch (Exception e) {
+			throw new ReflectException(e.getMessage(), e);
+		}
+	}
+
+	public static void setFloat(String fieldName, Object object, Float value)
+	{
+		try {
+			object.getClass().getField(fieldName).setFloat(object, value);
+		} catch (Exception e) {
+			throw new ReflectException(e.getMessage(), e);
+		}
+	}
+
+	public static void setDouble(String fieldName, Object object, Double value)
+	{
+		try {
+			object.getClass().getField(fieldName).setDouble(object, value);
+		} catch (Exception e) {
+			throw new ReflectException(e.getMessage(), e);
+		}
+	}
+
+	public static void setByte(String fieldName, Object object, byte value)
+	{
+		try {
+			object.getClass().getField(fieldName).setByte(object, value);
+		} catch (Exception e) {
+			throw new ReflectException(e.getMessage(), e);
+		}
+	}
+
+	public static void setChar(String fieldName, Object object, char value)
+	{
+		try {
+			object.getClass().getField(fieldName).setChar(object, value);
+		} catch (Exception e) {
+			throw new ReflectException(e.getMessage(), e);
+		}
+	}
+
+	public static void setDate(String fieldName, Object object, String value)
+	{
+		try {
+			object.getClass().getField(fieldName).set(object, ISO8601Date.parse(value));
+		} catch (Exception e) {
+			throw new ReflectException(e.getMessage(), e);
+		}
+	}
+
+	public static void set(String fieldName, Object object, Object value)
+	{
+		try {
+			object.getClass().getField(fieldName).set(object, value);
+		} catch (Exception e) {
+			throw new ReflectException(e.getMessage(), e);
+		}
+	}
+
+
+	//	public static boolean matches(Method m, String ... params) {
 //		return matches(m, null, params);
 //	}
 //	

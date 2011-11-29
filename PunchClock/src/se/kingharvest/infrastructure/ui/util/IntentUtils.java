@@ -1,6 +1,6 @@
 package se.kingharvest.infrastructure.ui.util;
 
-import se.kingharvest.infrastructure.system.Reflect;
+import se.kingharvest.infrastructure.system.Types;
 import android.content.Intent;
 
 public class IntentUtils {
@@ -16,22 +16,22 @@ public class IntentUtils {
         intent.putExtra(argTypeLabel, arg1.getClass().getSimpleName());
         
         Class<?> type = arg1.getClass();
-        if(Reflect.isInteger(type))
+        if(Types.isInteger(type))
         	intent.putExtra(argLabel, (Integer)arg1);
-        else if(Reflect.isDouble(type))
+        else if(Types.isDouble(type))
             intent.putExtra(argLabel, (Double)arg1);
-        else if(Reflect.isString(type))
+        else if(Types.isString(type))
             intent.putExtra(argLabel, (String)arg1);
-        else if(Reflect.isBoolean(type))
+        else if(Types.isBoolean(type))
             intent.putExtra(argLabel, (Boolean)arg1);
 		
-        else if(Reflect.isIntegerArray(type))
+        else if(Types.isIntegerArray(type))
         	intent.putExtra(argLabel, (Integer[])arg1);
-        else if(Reflect.isDoubleArray(type))
+        else if(Types.isDoubleArray(type))
             intent.putExtra(argLabel, (Double[])arg1);
-        else if(Reflect.isStringArray(type))
+        else if(Types.isStringArray(type))
             intent.putExtra(argLabel, (String[])arg1);
-        else if(Reflect.isBooleanArray(type))
+        else if(Types.isBooleanArray(type))
             intent.putExtra(argLabel, (Boolean[])arg1);
         else
         	throw new IllegalArgumentException("Type " + type + " is not an allowed type.");
@@ -41,22 +41,22 @@ public class IntentUtils {
 		String type = intent.getStringExtra(SE_KINGHARVEST_INTENTUTILS_ARGUMENT_TYPE_ + i);
 		String argLabel = intent.getStringExtra(SE_KINGHARVEST_INTENTUTILS_ARGUMENT_ + i);
 		
-        if(Reflect.isInteger(type))
+        if(Types.isInteger(type))
         	return intent.getIntExtra(argLabel, 0);
-        else if(Reflect.isDouble(type))
+        else if(Types.isDouble(type))
         	return intent.getDoubleExtra(argLabel, 0);
-        else if(Reflect.isString(type))
+        else if(Types.isString(type))
         	return intent.getStringExtra(argLabel);
-        else if(Reflect.isBoolean(type))
+        else if(Types.isBoolean(type))
         	return intent.getBooleanExtra(argLabel, false);
 		
-        else if(Reflect.isIntegerArray(type))
+        else if(Types.isIntegerArray(type))
         	return intent.getIntArrayExtra(argLabel);
-        else if(Reflect.isDoubleArray(type))
+        else if(Types.isDoubleArray(type))
         	return intent.getDoubleArrayExtra(argLabel);
-        else if(Reflect.isStringArray(type))
+        else if(Types.isStringArray(type))
         	return intent.getStringArrayExtra(argLabel);
-        else if(Reflect.isBooleanArray(type))
+        else if(Types.isBooleanArray(type))
         	return intent.getBooleanArrayExtra(argLabel);
         
         throw new IllegalArgumentException("Type " + type + " is not an allowed type.");

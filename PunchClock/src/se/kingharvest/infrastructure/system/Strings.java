@@ -12,4 +12,21 @@ public class Strings {
 		}
 		return sb.toString();
 	}
+
+	/**
+	 * Joins together a given number of copies of a single string.
+	 * @param str
+	 * @param separator
+	 * @return
+	 */
+	public static String join(String str, int count, String separator)
+	{
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < count; i++) {
+			sb.append(str);
+			if (i<count-1)
+				sb.append(separator);
+		}
+		return sb.toString();
+	}
 }

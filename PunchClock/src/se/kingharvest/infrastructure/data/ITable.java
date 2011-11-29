@@ -14,6 +14,6 @@ public interface ITable<E extends IEntity> {
 	
 	int update(E entity);
 	
-	int insert(E entity);
+	long insert(E entity);
 
 }
