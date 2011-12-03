@@ -4,15 +4,13 @@ import se.kingharvest.infrastructure.entity.IEntity;
 
 public interface ITable<E extends IEntity> {
 	
-	
-	
 	E select(int id);
 
 	E[] selectAll();
 	
 	int delete(int id);
 	
-	int update(E entity);
+	long update(E entity);
 	
 	long insert(E entity);
 

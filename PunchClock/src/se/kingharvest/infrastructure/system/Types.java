@@ -2,11 +2,25 @@ package se.kingharvest.infrastructure.system;
 
 import java.util.Date;
 
+/**
+ * Contains type detection for all primitive types plus String and Date.
+ */
 public class Types {
 
 	public static boolean isLong(Class<?> type) {
-		// TODO Auto-generated method stub
-		return false;
+		return type.equals(Long.class) || type.equals(long.class);
+	}
+
+	public static boolean isLong(String type) {
+		return type.equals(Long.class.getSimpleName()) || type.equals(long.class.getSimpleName());
+	}
+
+	public static boolean isLongArray(Class<?> type) {
+		return type.equals(Long[].class) || type.equals(long[].class);
+	}
+
+	public static boolean isLongArray(String type) {
+		return type.equals(Long[].class.getSimpleName()) || type.equals(long[].class.getSimpleName());
 	}
 
 	public static boolean isBooleanArray(String type) {
@@ -45,6 +59,14 @@ public class Types {
 		return type.equals(Boolean[].class) || type.equals(boolean[].class);
 	}
 
+	public static boolean isCharArray(Class<?> type) {
+		return type.equals(Character[].class) || type.equals(char[].class);
+	}
+
+	public static boolean isCharArray(String type) {
+		return type.equals(Character[].class.getSimpleName()) || type.equals(char[].class.getSimpleName());
+	}
+
 	public static boolean isStringArray(Class<?> type) {
 		return type.equals(String.class);
 	}
@@ -65,6 +87,22 @@ public class Types {
 		return type.equals(String.class);
 	}
 
+	public static boolean isChar(Class<?> type) {
+		return type.equals(Character.class) || type.equals(char.class);
+	}
+
+	public static boolean isChar(String type) {
+		return type.equals(Character.class.getSimpleName()) || type.equals(char.class.getSimpleName());
+	}
+
+	public static boolean isByte(Class<?> type) {
+		return type.equals(Byte.class) || type.equals(byte.class);
+	}
+
+	public static boolean isByte(String type) {
+		return type.equals(Byte.class.getSimpleName()) || type.equals(byte.class.getSimpleName());
+	}
+
 	public static boolean isDouble(Class<?> type) {
 		return type.equals(Double.class) || type.equals(double.class);
 	}
@@ -77,15 +115,55 @@ public class Types {
 		return type.equals(Short.class) || type.equals(short.class);
 	}
 
+	public static boolean isShort(String type) {
+		return type.equals(Short.class.getSimpleName()) || type.equals(short.class.getSimpleName());
+	}
+
+	public static boolean isShortArray(Class<?> type) {
+		return type.equals(Short[].class) || type.equals(short[].class);
+	}
+
+	public static boolean isShortArray(String type) {
+		return type.equals(Short[].class.getSimpleName()) || type.equals(short[].class.getSimpleName());
+	}
+
 	public static boolean isFloat(Class<?> type) {
 		return type.equals(Float.class) || type.equals(float.class);
+	}
+
+	public static boolean isFloat(String type) {
+		return type.equals(Float.class.getSimpleName()) || type.equals(float.class.getSimpleName());
+	}
+
+	public static boolean isFloatArray(Class<?> type) {
+		return type.equals(Float[].class) || type.equals(float[].class);
+	}
+
+	public static boolean isFloatArray(String type) {
+		return type.equals(Float[].class.getSimpleName()) || type.equals(float[].class.getSimpleName());
 	}
 
 	public static boolean isDate(Class<?> type) {
 		return type.equals(Date.class);
 	}
 
+	public static boolean isDate(String type) {
+		return type.equals(Date.class.getSimpleName());
+	}
+
+	public static boolean isDateArray(Class<?> type) {
+		return type.equals(Date[].class);
+	}
+
+	public static boolean isDateArray(String type) {
+		return type.equals(Date[].class.getSimpleName());
+	}
+
 	public static boolean isByteArray(Class<?> type) {
 		return type.equals(byte[].class) || type.equals(Byte[].class);
+	}
+
+	public static boolean isByteArray(String type) {
+		return type.equals(byte[].class.getSimpleName()) || type.equals(Byte[].class.getSimpleName());
 	}
 }

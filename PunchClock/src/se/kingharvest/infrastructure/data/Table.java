@@ -1,10 +1,9 @@
 package se.kingharvest.infrastructure.data;
 
 import java.lang.reflect.Array;
-import java.sql.Statement;
 
 import se.kingharvest.infrastructure.data.columns.ColumnCollection;
-import se.kingharvest.infrastructure.data.columns.ColumnReflect;
+import se.kingharvest.infrastructure.data.columns.ColumnHelper;
 import se.kingharvest.infrastructure.data.entity.EntityHelper;
 import se.kingharvest.infrastructure.entity.EntityBase;
 import se.kingharvest.infrastructure.system.Reflect;
@@ -23,6 +22,7 @@ public class Table<E extends EntityBase> implements ITable<E>{
 	final ColumnCollection<E> _columns;
 	
 	public SQLiteStatement _insertStatement;
+	public SQLiteStatement _updateStatement;
 	
 	@SuppressWarnings("unchecked")
 	public Table(String tableName, SQLiteDatabase database)
@@ -30,7 +30,7 @@ public class Table<E extends EntityBase> implements ITable<E>{
 		TableName = tableName;
 		_entityType = (Class<E>) Reflect.getGenericType(getClass());
 		_database = database;
-		_columns = ColumnReflect.getColumnsFromEntityType(_entityType);
+		_columns = ColumnHelper.getColumnsFromEntityType(_entityType);
 		IdColumn = _columns.IdColumn.Name;
 	}
 	
@@ -77,9 +77,18 @@ public class Table<E extends EntityBase> implements ITable<E>{
 		return SQLiteHelper.delete(_database, TableName, IdColumn, id);
 	}
 
-	public int update(E entity) {
-		// TODO Auto-generated method stub
-		return 0;
+	public long update(E entity) {
+
+		// Use a reusable update statement. Create it if it doesn't exist.
+		if (_updateStatement == null){
+			synchronized(_updateStatement){
+				_updateStatement = SQLiteHelper.createUpdateStatement(_database, _columns, TableName);				
+			}
+		}
+
+		EntityHelper.bindEntityToStatement(_updateStatement, entity, _columns);
+		long id = _updateStatement.executeInsert();
+		return id;
 	}
 
 	public long insert(E entity) {
@@ -91,7 +100,7 @@ public class Table<E extends EntityBase> implements ITable<E>{
 			}
 		}
 		
-		SQLiteHelper.bindStatement(_insertStatement, entity, _columns);
+		EntityHelper.bindEntityToStatement(_insertStatement, entity, _columns);
 		long id = _insertStatement.executeInsert();
 		return id;
 	}

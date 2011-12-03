@@ -1,5 +1,6 @@
 package se.kingharvest.infrastructure.system;
 
+
 public class Strings {
 
 	public static String join(String[] strings, String separator)
@@ -28,5 +29,19 @@ public class Strings {
 				sb.append(separator);
 		}
 		return sb.toString();
+	}
+
+	public static String[] removeOne(String toRemove, String[] strings) {
+
+		String[] removed = new String[strings.length];
+		int offset=0;
+		for (int j = 0; j < removed.length; j++) {
+			if(strings[j+offset].equals(toRemove))
+			{
+				offset = 1;
+			}
+			removed[j] = strings[j+offset];
+		}
+		return removed;
 	}
 }

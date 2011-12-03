@@ -4,6 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
+import java.util.Date;
 
 /**
  * Various reflection based utility methods.
@@ -190,7 +191,7 @@ public class Reflect {
 		}
 	}
 
-	public static void setDate(String fieldName, Object object, String value)
+	public static void setDateString(String fieldName, Object object, String value)
 	{
 		try {
 			object.getClass().getField(fieldName).set(object, ISO8601Date.parse(value));
@@ -208,6 +209,110 @@ public class Reflect {
 		}
 	}
 
+	public static void setByteArrayClone(String fieldName, Object object, byte[] value)
+	{
+		try {
+			object.getClass().getField(fieldName).set(object, value.clone());
+		} catch (Exception e) {
+			throw new ReflectException(e.getMessage(), e);
+		}
+	}
+
+	public static long getLong(String fieldName, Object object){
+		try {
+			return object.getClass().getField(fieldName).getLong(object);
+		} catch (Exception e) {
+			throw new ReflectException(e.getMessage(), e);
+		}		
+	}
+	
+	public static int getInt(String fieldName, Object object){
+		try {
+			return object.getClass().getField(fieldName).getInt(object);
+		} catch (Exception e) {
+			throw new ReflectException(e.getMessage(), e);
+		}		
+	}
+
+	public static short getShort(String fieldName, Object object){
+		try {
+			return object.getClass().getField(fieldName).getShort(object);
+		} catch (Exception e) {
+			throw new ReflectException(e.getMessage(), e);
+		}		
+	}
+
+	public static byte getByte(String fieldName, Object object){
+		try {
+			return object.getClass().getField(fieldName).getByte(object);
+		} catch (Exception e) {
+			throw new ReflectException(e.getMessage(), e);
+		}		
+	}
+
+	public static char getChar(String fieldName, Object object){
+		try {
+			return object.getClass().getField(fieldName).getChar(object);
+		} catch (Exception e) {
+			throw new ReflectException(e.getMessage(), e);
+		}		
+	}
+
+	public static boolean getBoolean(String fieldName, Object object){
+		try {
+			return object.getClass().getField(fieldName).getBoolean(object);
+		} catch (Exception e) {
+			throw new ReflectException(e.getMessage(), e);
+		}		
+	}
+
+	public static double getDouble(String fieldName, Object object){
+		try {
+			return object.getClass().getField(fieldName).getDouble(object);
+		} catch (Exception e) {
+			throw new ReflectException(e.getMessage(), e);
+		}		
+	}
+	
+	public static float getFloat(String fieldName, Object object){
+		try {
+			return object.getClass().getField(fieldName).getFloat(object);
+		} catch (Exception e) {
+			throw new ReflectException(e.getMessage(), e);
+		}		
+	}
+
+	public static String getString(String fieldName, Object object){
+		try {
+			return (String) object.getClass().getField(fieldName).get(object);
+		} catch (Exception e) {
+			throw new ReflectException(e.getMessage(), e);
+		}		
+	}
+
+	public static String getDateString(String fieldName, Object object){
+		try {
+			return ISO8601Date.toString((Date) object.getClass().getField(fieldName).get(object));
+		} catch (Exception e) {
+			throw new ReflectException(e.getMessage(), e);
+		}		
+	}
+
+	public static byte[] getByteArray(String fieldName, Object object){
+		try {
+			return (byte[]) object.getClass().getField(fieldName).get(object);
+		} catch (Exception e) {
+			throw new ReflectException(e.getMessage(), e);
+		}		
+	}
+
+	public static Object get(String fieldName, Object object){
+		try {
+			return object.getClass().getField(fieldName).get(object);
+		} catch (Exception e) {
+			throw new ReflectException(e.getMessage(), e);
+		}		
+	}
 
 	//	public static boolean matches(Method m, String ... params) {
 //		return matches(m, null, params);

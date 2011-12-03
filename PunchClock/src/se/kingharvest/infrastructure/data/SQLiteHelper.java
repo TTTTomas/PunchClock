@@ -4,7 +4,6 @@ import se.kingharvest.infrastructure.data.columns.Column;
 import se.kingharvest.infrastructure.data.columns.ColumnCollection;
 import se.kingharvest.infrastructure.data.types.Id;
 import se.kingharvest.infrastructure.entity.IEntity;
-import se.kingharvest.infrastructure.system.Reflect;
 import se.kingharvest.infrastructure.system.Strings;
 import se.kingharvest.infrastructure.system.Types;
 import android.database.Cursor;
@@ -32,20 +31,25 @@ public class SQLiteHelper {
 	public static String toSqliteType(Class<?> type) {
 
 		// Available Sqlite types:
+		// BLOB	"BLOB"
 		// TEXT	"TEXT"
 		// NUMERIC	"NUM"
 		// INTEGER	"INT"
 		// REAL	"REAL"
 		// NONE	"" (empty string)
 		
-		if(Types.isBoolean(type) || Types.isInteger(type))
+		if(Types.isBoolean(type) || Types.isInteger(type) || Types.isLong(type) || Types.isShort(type) || Types.isByte(type))
 			return "INTEGER";
-		else if(Types.isString(type))
+		else if(Types.isString(type) || Types.isChar(type))
 			return "TEXT";
-		else if(Types.isDouble(type))
+		else if(Types.isDouble(type) || Types.isFloat(type))
 			return "REAL";
 		else if(type.equals(Id.class))
 			return "INTEGER ";
+		else if(Types.isDate(type))
+			return "TEXT ";
+		else if(Types.isByteArray(type))
+			return "BLOB ";
 		
 		throw new IllegalArgumentException("Type " + type + " is not a valid Sqlite type.");
 	}
@@ -65,6 +69,23 @@ public class SQLiteHelper {
 		return c;
 	}
 	
+	public static <E extends IEntity> SQLiteStatement createUpdateStatement(SQLiteDatabase database, ColumnCollection<E> columns, String tableName)
+	{
+		String[] columnsWithoutIdColumn = Strings.removeOne(columns.IdColumn.Name, columns.getColumnNames());
+		
+		String parameters = Strings.join(columnsWithoutIdColumn, "=?, ");
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("UPDATE ").append(tableName)
+			.append(" SET ").append(parameters)
+			.append(" WHERE ").append(columns.IdColumn).append("=?");
+		
+		String sql = sb.toString();
+
+		SQLiteStatement statement = database.compileStatement(sql);
+		return statement;
+	}
+
 	public static <E extends IEntity> SQLiteStatement createInsertStatement(SQLiteDatabase database, ColumnCollection<E> columns, String tableName)
 	{
 		String parameters = Strings.join("?", columns.count(), ", ");
@@ -78,29 +99,6 @@ public class SQLiteHelper {
 
 		SQLiteStatement statement = database.compileStatement(sql);
 		return statement;
-	}
-	
-	public static <E extends IEntity> void bindStatement(SQLiteStatement statement, E entity, ColumnCollection<E> columnCollection)
-	{
-		Column[] columns = columnCollection.Columns;
-		for (int i = 0; i < columns.length; i++) {
-			Column column = columns[i];
-			bindValue(statement, entity, column);
-		}
-	}
-
-	public static <E extends IEntity> void bindValue(SQLiteStatement statement, E entity, Column column)
-	{
-		Class<?> type = column.Type;
-		int index = column.Ordinal+1;
-		if(Types.isBoolean(type) || Types.isInteger(type) || type.equals(Id.class))
-			statement.bindLong(index, Reflect.getLong());
-		else if(Types.isString(type))
-			statement.bindString(index, value);
-		else if(Types.isDouble(type))
-			statement.bindDouble(index, value);
-		else if(Types.isByteArray(type))
-			statement.bindBlob(index, value);
 	}
 
 }
