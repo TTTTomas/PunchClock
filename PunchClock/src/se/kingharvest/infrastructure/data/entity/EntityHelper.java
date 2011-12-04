@@ -66,6 +66,8 @@ public class EntityHelper {
 			int index = cursor.getColumnIndex(column.Name);
 			if(Types.isBoolean(type))
 				Reflect.setBoolean(column.Name, entity, cursor.getInt(index) != 0);
+			else if(type.getClass().equals(Id.class))
+				Reflect.setInteger(column.Name, entity, cursor.getInt(index));
 			else if(Types.isInteger(type))
 				Reflect.setInteger(column.Name, entity, cursor.getInt(index));
 			else if(Types.isLong(type))
@@ -78,6 +80,8 @@ public class EntityHelper {
 				Reflect.setDouble(column.Name, entity, cursor.getDouble(index));
 			else if(Types.isFloat(type))
 				Reflect.setFloat(column.Name, entity, cursor.getFloat(index));
+			else if(Types.isByte(type))
+				Reflect.setByte(column.Name, entity, cursor.getShort(index));
 			else
 				throw new IllegalArgumentException("Value type " + type + " is not a valid type for setting field values.");
 			
