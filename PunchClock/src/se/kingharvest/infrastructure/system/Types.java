@@ -1,5 +1,6 @@
 package se.kingharvest.infrastructure.system;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -16,15 +17,15 @@ public class Types {
 	}
 
 	public static boolean isLongArray(Class<?> type) {
-		return type.equals(Long[].class) || type.equals(long[].class);
+		return type.equals(long[].class);
 	}
 
 	public static boolean isLongArray(String type) {
-		return type.equals(Long[].class.getSimpleName()) || type.equals(long[].class.getSimpleName());
+		return type.equals(long[].class.getSimpleName());
 	}
 
 	public static boolean isBooleanArray(String type) {
-		return type.equals(Boolean[].class.getSimpleName()) || type.equals(boolean[].class.getSimpleName());
+		return type.equals(boolean[].class.getSimpleName());
 	}
 
 	public static boolean isStringArray(String type) {
@@ -32,11 +33,11 @@ public class Types {
 	}
 
 	public static boolean isDoubleArray(String type) {
-		return type.equals(Double[].class.getSimpleName()) || type.equals(double[].class.getSimpleName());
+		return type.equals(double[].class.getSimpleName());
 	}
 
 	public static boolean isIntegerArray(String type) {
-		return type.equals(Integer[].class.getSimpleName()) || type.equals(int[].class.getSimpleName());
+		return type.equals(int[].class.getSimpleName());
 	}
 
 	public static boolean isBoolean(String type) {
@@ -56,15 +57,15 @@ public class Types {
 	}
 
 	public static boolean isBooleanArray(Class<?> type) {
-		return type.equals(Boolean[].class) || type.equals(boolean[].class);
+		return type.equals(boolean[].class);
 	}
 
 	public static boolean isCharArray(Class<?> type) {
-		return type.equals(Character[].class) || type.equals(char[].class);
+		return type.equals(char[].class);
 	}
 
 	public static boolean isCharArray(String type) {
-		return type.equals(Character[].class.getSimpleName()) || type.equals(char[].class.getSimpleName());
+		return type.equals(char[].class.getSimpleName());
 	}
 
 	public static boolean isStringArray(Class<?> type) {
@@ -72,11 +73,11 @@ public class Types {
 	}
 
 	public static boolean isDoubleArray(Class<?> type) {
-		return type.equals(Double[].class) || type.equals(double[].class);
+		return type.equals(double[].class);
 	}
 
 	public static boolean isIntegerArray(Class<?> type) {
-		return type.equals(Integer[].class) || type.equals(int[].class);
+		return type.equals(int[].class);
 	}
 
 	public static boolean isBoolean(Class<?> type) {
@@ -120,11 +121,11 @@ public class Types {
 	}
 
 	public static boolean isShortArray(Class<?> type) {
-		return type.equals(Short[].class) || type.equals(short[].class);
+		return type.equals(short[].class);
 	}
 
 	public static boolean isShortArray(String type) {
-		return type.equals(Short[].class.getSimpleName()) || type.equals(short[].class.getSimpleName());
+		return type.equals(short[].class.getSimpleName());
 	}
 
 	public static boolean isFloat(Class<?> type) {
@@ -136,11 +137,11 @@ public class Types {
 	}
 
 	public static boolean isFloatArray(Class<?> type) {
-		return type.equals(Float[].class) || type.equals(float[].class);
+		return type.equals(float[].class);
 	}
 
 	public static boolean isFloatArray(String type) {
-		return type.equals(Float[].class.getSimpleName()) || type.equals(float[].class.getSimpleName());
+		return type.equals(float[].class.getSimpleName());
 	}
 
 	public static boolean isDate(Class<?> type) {
@@ -160,10 +161,26 @@ public class Types {
 	}
 
 	public static boolean isByteArray(Class<?> type) {
-		return type.equals(byte[].class) || type.equals(Byte[].class);
+		return type.equals(Byte[].class);
 	}
 
 	public static boolean isByteArray(String type) {
-		return type.equals(byte[].class.getSimpleName()) || type.equals(Byte[].class.getSimpleName());
+		return type.equals(Byte[].class.getSimpleName());
+	}
+
+	public static boolean isSerializable(Class<?> type) {
+		return (type instanceof Serializable);
+	}
+
+	public static boolean isSerializable(String type) {
+		return type.equals(Serializable.class.getSimpleName());
+	}
+
+	public static boolean isVoid(Class<?> type) {
+		return type.equals(Void.class);
+	}
+
+	public static boolean isVoid(String type) {
+		return type.equals(Void.class.getSimpleName());
 	}
 }

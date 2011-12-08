@@ -86,7 +86,7 @@ public class Table<E extends EntityBase> implements ITable<E>{
 			}
 		}
 
-		EntityHelper.bindEntityToStatement(_updateStatement, entity, _columns);
+		EntityHelper.bindEntityToStatement(entity, _updateStatement, _columns);
 		long id = _updateStatement.executeInsert();
 		return id;
 	}
@@ -100,7 +100,7 @@ public class Table<E extends EntityBase> implements ITable<E>{
 			}
 		}
 		
-		EntityHelper.bindEntityToStatement(_insertStatement, entity, _columns);
+		EntityHelper.bindEntityToStatement(entity, _insertStatement, _columns);
 		long id = _insertStatement.executeInsert();
 		return id;
 	}

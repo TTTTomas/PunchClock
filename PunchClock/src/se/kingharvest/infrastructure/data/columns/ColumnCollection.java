@@ -1,5 +1,7 @@
 package se.kingharvest.infrastructure.data.columns;
 
+import java.util.HashMap;
+
 import se.kingharvest.infrastructure.entity.IEntity;
 import se.kingharvest.infrastructure.system.Strings;
 
@@ -7,6 +9,7 @@ public class ColumnCollection<E extends IEntity> {
 
 	public final Column IdColumn;
 	public final Column[] Columns;
+	public final HashMap<String, Column> ColumnByName = new HashMap<String, Column>();
 	
 	final String[] _columnNames;
 	final String[] _columnsAsStrings;
@@ -32,6 +35,7 @@ public class ColumnCollection<E extends IEntity> {
 			Column c = columns[i];
 			_columnsAsStrings[i] = c.toString();
 			_columnNames[i] = c.Name;
+			ColumnByName.put(c.Name, c);
 			if(c.IsIdColumn)
 			{
 				idColumn = c;
@@ -68,6 +72,11 @@ public class ColumnCollection<E extends IEntity> {
 	}
 
 	public String getSortedColumnsAsString() {
+		return null;
+	}
+
+	public Column getColumnByName(String columnName) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 }

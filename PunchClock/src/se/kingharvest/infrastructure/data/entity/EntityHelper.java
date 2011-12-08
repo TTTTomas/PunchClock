@@ -11,19 +11,28 @@ import android.database.sqlite.SQLiteStatement;
 
 public class EntityHelper {
 
-	public static <E extends IEntity> E createEntityFromCursor(Cursor cursor, ColumnCollection<E> columns, Class<E> entityType)
+	/**
+	 * Puts all field values of an entity into a statement as specified by a column collection.
+	 * @param entity
+	 * @param statement
+	 * @param columnCollection
+	 */
+	public static <E extends IEntity> void bindEntityToStatement(E entity, SQLiteStatement statement, ColumnCollection<E> columnCollection)
 	{
-		E entity = Reflect.newInstance(entityType);
-	
-		// FIXME: should iterate cursor instead of columns.
-		Column[] cols = columns.Columns;
-		for (int i = 0; i < cols.length; i++) {
-			EntityHelper.setValue(cursor, cols[i], entity);
+		Column[] columns = columnCollection.Columns;
+		for (int i = 0; i < columns.length; i++) {
+			Column column = columns[i];
+			bindValueToStatement(entity, statement, column);
 		}
-		return entity;
 	}
 
-	public static <E extends IEntity> void bindValue(SQLiteStatement statement, E entity, Column column)
+	/**
+	 * Puts a single field value of an entity into a statement as specified by a column.
+	 * @param entity
+	 * @param statement
+	 * @param column
+	 */
+	public static <E extends IEntity> void bindValueToStatement(E entity, SQLiteStatement statement, Column column)
 	{
 		Class<?> type = column.Type;
 		int index = column.Ordinal+1;
@@ -51,49 +60,63 @@ public class EntityHelper {
 			statement.bindBlob(index, Reflect.getByteArray(column.Name, entity));
 	}
 
-	public static <E extends IEntity> void bindEntityToStatement(SQLiteStatement statement, E entity, ColumnCollection<E> columnCollection)
+	/**
+	 * Creates a new entity from the contents of a cursor, as specified by a column collection.
+	 * It is not necessary for the cursor to fully match a full entity. If the cursor contains less columns,
+	 * the entity will be filled with whatever the cursor contains.
+	 * @param cursor
+	 * @param columns
+	 * @param entityType
+	 * @return
+	 */
+	public static <E extends IEntity> E createEntityFromCursor(Cursor cursor, ColumnCollection<E> columns, Class<E> entityType)
 	{
-		Column[] columns = columnCollection.Columns;
-		for (int i = 0; i < columns.length; i++) {
-			Column column = columns[i];
-			bindValue(statement, entity, column);
+		E entity = Reflect.newInstance(entityType);
+	
+		// Iterates the cursor instead of columns. This makes it possible to create entities 
+		// from "incomplete" queries.
+		int count = cursor.getColumnCount();
+		for (int i = 0; i < count; i++) {
+			String columnName = cursor.getColumnName(i);
+			Column column = columns.ColumnByName.get(columnName);
+			EntityHelper.setValueFromCursor(cursor, entity, i, column);
 		}
+		return entity;
 	}
 
-	public static <E extends IEntity> void setValue(Cursor cursor, Column column, E entity)
-		{
-			Class<?> type = column.Type;
-			int index = cursor.getColumnIndex(column.Name);
-			if(Types.isBoolean(type))
-				Reflect.setBoolean(column.Name, entity, cursor.getInt(index) != 0);
-			else if(type.getClass().equals(Id.class))
-				Reflect.setInteger(column.Name, entity, cursor.getInt(index));
-			else if(Types.isInteger(type))
-				Reflect.setInteger(column.Name, entity, cursor.getInt(index));
-			else if(Types.isLong(type))
-				Reflect.setLong(column.Name, entity, cursor.getLong(index));
-			else if(Types.isShort(type))
-				Reflect.setShort(column.Name, entity, cursor.getShort(index));
-			else if(Types.isString(type))
-				Reflect.set(column.Name, entity, cursor.getString(index));
-			else if(Types.isDouble(type))
-				Reflect.setDouble(column.Name, entity, cursor.getDouble(index));
-			else if(Types.isFloat(type))
-				Reflect.setFloat(column.Name, entity, cursor.getFloat(index));
-			else if(Types.isByte(type))
-				Reflect.setByte(column.Name, entity, cursor.getShort(index));
-			else
-				throw new IllegalArgumentException("Value type " + type + " is not a valid type for setting field values.");
-			
-	//		else if(Types.isChar(type))
-	//			Reflect.setFloat(column.Name, entity, cursor.getFloat(index));
-	//		else if(Types.isByte(type))
-	//			Reflect.setFloat(column.Name, entity, cursor.getFloat(index));
-	//		else if(Types.isDate(type))
-	//			Reflect.setFloat(column.Name, entity, cursor.getFloat(index));
-	//		else if(Types.isByte(type))
-	//			Reflect.setFloat(column.Name, entity, cursor.getFloat(index));
-			
-			
-		}
+	/**
+	 * Sets a single field value in an entity from a cursor as specified by a column.
+	 * @param cursor
+	 * @param entity
+	 * @param cursorIndex
+	 * @param column
+	 */
+	public static <E extends IEntity> void setValueFromCursor(Cursor cursor, E entity, int cursorIndex, Column column)
+	{
+		Class<?> type = column.Type;
+		if(Types.isInteger(type) || type.getClass().equals(Id.class))
+			Reflect.setInteger(column.Name, entity, cursor.getInt(cursorIndex));
+		else if(Types.isLong(type))
+			Reflect.setLong(column.Name, entity, cursor.getLong(cursorIndex));
+		else if(Types.isShort(type))
+			Reflect.setShort(column.Name, entity, cursor.getShort(cursorIndex));
+		else if(Types.isString(type))
+			Reflect.set(column.Name, entity, cursor.getString(cursorIndex));
+		else if(Types.isDouble(type))
+			Reflect.setDouble(column.Name, entity, cursor.getDouble(cursorIndex));
+		else if(Types.isBoolean(type))
+			Reflect.setBoolean(column.Name, entity, cursor.getInt(cursorIndex) != 0);
+		else if(Types.isFloat(type))
+			Reflect.setFloat(column.Name, entity, cursor.getFloat(cursorIndex));
+		else if(Types.isDate(type))
+			Reflect.setDateString(column.Name, entity, cursor.getString(cursorIndex));
+		else if(Types.isByte(type))
+			Reflect.setByte(column.Name, entity, (byte) cursor.getShort(cursorIndex));
+		else if(Types.isByteArray(type))
+			Reflect.setByteArrayClone(column.Name, entity, cursor.getBlob(cursorIndex));
+		else if(Types.isChar(type)) 
+			Reflect.setChar(column.Name, entity, cursor.getString(cursorIndex).charAt(0));
+		else
+			throw new IllegalArgumentException("Value type " + type + " is not a valid type for setting field values.");			
+	}
 }

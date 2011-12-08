@@ -127,4 +127,22 @@ public class ISO8601Date {
         
     }
 
+	public static String[] toStringArray(Date[] dates) 
+	{
+		String[] datesAsStrings = new String[dates.length];
+		for (int i = 0; i < dates.length; i++) {
+			datesAsStrings[i] = toString(dates[i]);
+		}
+		return datesAsStrings;
+	}
+
+	public static Date[] parseArray(String[] datesAsStrings) 
+	{
+		Date[] dates = new Date[datesAsStrings.length];
+		for (int i = 0; i < datesAsStrings.length; i++) {
+			dates[i] = parse(datesAsStrings[i]);
+		}
+		return dates;
+	}
+
 }

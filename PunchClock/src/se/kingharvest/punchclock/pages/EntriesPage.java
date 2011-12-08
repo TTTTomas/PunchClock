@@ -40,10 +40,10 @@ public class EntriesPage extends ActivityBase<EntriesPage, EntriesViewModel>{
 	}
 	
 	@NavigateTo(startWithArguments)
-	void startWithArguments(String arg1)
+	void startWithArguments(String arg1, String arg2, long arg3)
 	{
-    	Logger.write(LOG_TAG, "startWithArguments: " + arg1);
-    	i = 103;
+    	Logger.write(LOG_TAG, "startWithArguments: " + arg1 + ", arg2: " + arg2 + ", arg3: " + arg3);
+    	i = (int) arg3;
 	}
 
 }
