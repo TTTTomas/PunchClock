@@ -1,8 +1,10 @@
 package se.kingharvest.infrastructure.entity;
 
+import se.kingharvest.infrastructure.data.types.Id;
+
 public interface IEntity {
 
-	int getId();
+	Id getId();
 	
 	boolean save();
 }

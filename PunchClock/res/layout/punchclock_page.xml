@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+
+<Button 
+	android:text="Start" 
+	android:id="@+id/punchclock_start_button" 
+	android:layout_width="fill_parent" 
+	android:layout_height="wrap_content"
+	/>
+
+<Button 
+	android:text="Break" 
+	android:id="@+id/punchclock_break_button" 
+	android:layout_width="fill_parent" 
+	android:layout_height="wrap_content"
+	/>
+	
+<TextView 
+	android:text="" 
+	android:id="@+id/punchclock_status_text" 
+	android:layout_width="fill_parent" 
+	android:layout_height="wrap_content"
+	/>
+
+</RelativeLayout>

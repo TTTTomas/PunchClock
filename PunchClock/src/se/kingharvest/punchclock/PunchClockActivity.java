@@ -1,13 +1,9 @@
 package se.kingharvest.punchclock;
 
 import se.kingharvest.infrastructure.ui.ActivityBase;
-import se.kingharvest.infrastructure.ui.DialogBase;
-import se.kingharvest.infrastructure.ui.DialogManager;
-import se.kingharvest.infrastructure.ui.annotation.OnActivityResult;
 import se.kingharvest.infrastructure.ui.annotation.OnClick;
-import se.kingharvest.punchclock.pages.EntriesPage;
-import android.app.Dialog;
-import android.content.Intent;
+import se.kingharvest.punchclock.dialogs.AskForJobDialog;
+import se.kingharvest.punchclock.dialogs.AskForJobDialog.OnNewJobOkListener;
 import android.view.View;
 
 
@@ -17,7 +13,7 @@ public class PunchClockActivity extends ActivityBase<PunchClockActivity, PunchCl
 	private static final String LOG_TAG = PunchClockActivity.class.getSimpleName();
 	
 	public int getContentView() {
-		return R.layout.main;
+		return R.layout.punchclock_page;
 	}
 	
 	public PunchClockViewModel createViewModel() {
@@ -26,94 +22,61 @@ public class PunchClockActivity extends ActivityBase<PunchClockActivity, PunchCl
 
 	public void bindView()
     {		
-        getButton(R.id.punchclock_button)
+        getButton(R.id.punchclock_start_button)
     		.bindOnClick(this);
 
-        getButton(R.id.punchclock_go_to_entries)
+        getButton(R.id.punchclock_break_button)
     		.bindOnClick(this);
-
-        getButton(R.id.punchclock_go_to_entries_with_arguments)
-    		.bindOnClick(this);
-
-        getButton(R.id.punchclock_show_dialog_button)
-        	.bindOnClick(this);
     }
 
 	public void bindViewModel() 
 	{
-        getTextView(R.id.punchclock_text_property)
-        	.bindText(_viewModel.CounterText);
+		getButton(R.id.punchclock_start_button)
+        	.bindText(_viewModel.StartButtonText);
 
-        getTextView(R.id.punchclock_just_text)
-        	.setText("Just text.");
+		getTextView(R.id.punchclock_status_text)
+        	.bindText(_viewModel.StatusText);
 	}	
 	
-	@OnClick(R.id.punchclock_button)
-	public void punch(View button)
+	@OnClick(R.id.punchclock_start_button)
+	public void startClicked(View button)
 	{
-		_viewModel.setCounter(_viewModel.getCounter()+1);
+		_viewModel.startOrStopCurrentProject();
+	}
+
+	@OnClick(R.id.punchclock_break_button)
+	public void breakClicked(View v)
+	{
+		_viewModel.breakCurrentJob();
+	}
+
+	public void askForJob() {
 		
-		Dialog d = new DialogBase(this);
-		d.setTitle("Hello");
-		d.show();
+		AskForJobDialog dialog = new AskForJobDialog(this, onNewJobOk());
+		dialog.show();
+	}
+
+	private OnNewJobOkListener onNewJobOk() {
 		
-		getTextView(R.id.punchclock_just_text).setText("This happens while the dialog shows.");
-	}
-
-	Dialog a;
-	Dialog b;
-	Dialog c;
-	
-	@OnClick(R.id.punchclock_show_dialog_button)
-	public void showDialog(View v)
-	{
-		a = new DialogBase(this);
-		a.setTitle("A!");
-
-		b = new DialogBase(this);
-		b.setTitle("B!");
-
-		c = new DialogBase(this);
-		c.setTitle("C!");
-
-		new Thread(new Runnable() {			
-			public void run() {
-				dialogWorkflow();
-			}
-		}).start();
+		return null;
 	}
 	
-	private void dialogWorkflow()
-	{
-		DialogManager.show(this, a);
-
-		//getTextView(R.id.punchclock_just_text).setText("A done.");
-
-		DialogManager.show(this, b);
-
-		//getTextView(R.id.punchclock_just_text).setText("B done.");
-
-		DialogManager.show(this, c);
-
-		//getTextView(R.id.punchclock_just_text).setText("C done.");
-	}
-	
-	@OnClick(R.id.punchclock_go_to_entries)
-	public void goToEntries(View button)
-	{
-		navigateForResult(EntriesPage.class, EntriesPage.SHOW_ENTRIES);
-	}
-	
-	@OnClick(R.id.punchclock_go_to_entries_with_arguments)
-	public void goToEntriesWithArguments(View button)
-	{
-		navigateTo(EntriesPage.class, EntriesPage.startWithArguments, "Hello", null, 4);
-	}
-
-	@OnActivityResult(EntriesPage.SHOW_ENTRIES)
-	public void returnFromEntries(int resultCode, Intent result)
-	{
-		_viewModel.setCounter(_viewModel.getCounter()+resultCode);
-	}
+//	@OnClick(R.id.punchclock_go_to_entries)
+//	public void goToEntries(View button)
+//	{
+//		navigateForResult(EntriesPage.class, EntriesPage.SHOW_ENTRIES);
+//	}
+//	
+//	@OnClick(R.id.punchclock_go_to_entries_with_arguments)
+//	public void goToEntriesWithArguments(View button)
+//	{
+//		navigateTo(EntriesPage.class, EntriesPage.startWithArguments, "Hello", null, 4);
+//	}
+//
+//	@OnActivityResult(EntriesPage.SHOW_ENTRIES)
+//	public void returnFromEntries(int resultCode, Intent result)
+//	{
+//		_viewModel.setCounter(_viewModel.getCounter()+resultCode);
+//	}
 	
 }

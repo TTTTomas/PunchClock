@@ -1,11 +1,13 @@
 package se.kingharvest.infrastructure.entity;
 
+import se.kingharvest.infrastructure.data.types.Id;
+
 public class EntityBase implements IEntity{
 
 	private int _id;
 	
-	public int getId() {
-		return _id;
+	public Id getId() {
+		return new Id(_id);
 	}
 
 	void setId(int id) {

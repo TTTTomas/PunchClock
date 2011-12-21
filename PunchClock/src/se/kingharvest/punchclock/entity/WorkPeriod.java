@@ -12,5 +12,6 @@ public class WorkPeriod extends EntityBase {
 	public Id ProjectId;
 	public Id[] Activities;
 	public Id Location;
-	public String Note;	
+	public String Note;
+	public boolean InProgress;	
 }
