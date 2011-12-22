@@ -2,7 +2,7 @@ package se.kingharvest.infrastructure.time;
 
 public class TimeSpan {
 	
-	public final double TotalMilliSeconds;
+	public final long TotalMilliSeconds;
 	public final double TotalSeconds;
 	public final double TotalMinutes;
 	public final double TotalHours;

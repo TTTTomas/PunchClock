@@ -7,7 +7,7 @@ import se.kingharvest.infrastructure.system.Strings;
 
 public class ColumnCollection<E extends IEntity> {
 
-	public final Column IdColumn;
+	public final Column PrimaryIdColumn;
 	public final Column[] Columns;
 	public final HashMap<String, Column> ColumnByName = new HashMap<String, Column>();
 	
@@ -21,7 +21,7 @@ public class ColumnCollection<E extends IEntity> {
 		Columns = columns;
 		_columnsAsStrings = new String[Columns.length];
 		_columnNames = new String[Columns.length];
-		IdColumn = addColumns(columns);
+		PrimaryIdColumn = addColumns(columns);
 	}
 	
 	/**
@@ -36,7 +36,7 @@ public class ColumnCollection<E extends IEntity> {
 			_columnsAsStrings[i] = c.toString();
 			_columnNames[i] = c.Name;
 			ColumnByName.put(c.Name, c);
-			if(c.IsIdColumn)
+			if(c.IsPrimaryIdColumn)
 			{
 				idColumn = c;
 			}

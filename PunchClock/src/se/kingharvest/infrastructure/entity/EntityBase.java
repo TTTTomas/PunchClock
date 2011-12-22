@@ -1,23 +1,17 @@
 package se.kingharvest.infrastructure.entity;
 
-import se.kingharvest.infrastructure.data.types.Id;
+import se.kingharvest.infrastructure.data.types.PrimaryId;
+
 
 public class EntityBase implements IEntity{
 
-	private int _id;
+	public PrimaryId Id = new PrimaryId(0);
 	
-	public Id getId() {
-		return new Id(_id);
+	public PrimaryId getId() {
+		return Id;
 	}
 
 	void setId(int id) {
-		_id = id;
+		Id.set(id);
 	}
-
-	public boolean save() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	
-	
 }

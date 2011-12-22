@@ -2,6 +2,7 @@ package se.kingharvest.punchclock.model;
 
 import java.util.Date;
 
+import se.kingharvest.infrastructure.time.DateTime;
 import se.kingharvest.infrastructure.time.TimeSpan;
 import se.kingharvest.punchclock.data.WorkPeriodTable;
 import se.kingharvest.punchclock.entity.Project;
@@ -27,7 +28,19 @@ public class PunchHandler {
 	}
 
 	public static void stopPeriod(WorkPeriod periodInProgress) {
-		// TODO Auto-generated method stub		
+	
+		// If stop occurs after start, then that means that the period was in
+		// a break and that it is stopped before it manages to even start.
+		periodInProgress.Stop = new Date();
+		if (periodInProgress.Stop.before(periodInProgress.Start))
+		{
+			WorkPeriodTable.getTable().delete(periodInProgress.getId().get());
+		}
+		else
+		{
+			periodInProgress.InProgress = false;
+			WorkPeriodTable.getTable().update(periodInProgress);
+		}
 	}
 
 	public static WorkPeriod getPeriodInProgress() {
@@ -36,15 +49,20 @@ public class PunchHandler {
 		return period;
 	}
 
-	public static TimeSpan getBreakTime(Project _currentProject) {
+	public static TimeSpan getBreakTime(Project currentProject) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public static void insertBreakInPeriod(WorkPeriod periodInProgress,
-			TimeSpan breakTime) {
-		// TODO Auto-generated method stub
+	public static void insertBreakInPeriod(WorkPeriod periodInProgress, TimeSpan breakTime) {
 		
+		stopPeriod(periodInProgress);
+		WorkPeriod nextPeriod = periodInProgress.copy();
+		nextPeriod.Stop = null;
+		nextPeriod.Start = DateTime.add(new Date(), breakTime);
+		nextPeriod.InProgress = true;
+		
+		WorkPeriodTable.getTable().insert(nextPeriod);
 	}
 
 }

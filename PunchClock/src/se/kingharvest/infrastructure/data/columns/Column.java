@@ -2,6 +2,7 @@ package se.kingharvest.infrastructure.data.columns;
 
 import se.kingharvest.infrastructure.data.sqlite.SQLiteHelper;
 import se.kingharvest.infrastructure.data.types.Id;
+import se.kingharvest.infrastructure.data.types.PrimaryId;
 
 public class Column {
 	
@@ -13,12 +14,13 @@ public class Column {
 		Fourth
 	}
 
-	public String Name;
-	public Class<?> Type;
-	public int Ordinal;
-	public Order Order;
+	public final String Name;
+	public final Class<?> Type;
+	public final int Ordinal;
+	public final Order Order;
 	
-	public boolean IsIdColumn;
+	public final boolean IsIdColumn;
+	public final boolean IsPrimaryIdColumn;
 	
 	public Column(String name, Class<?> type, int ordinal)
 	{
@@ -32,8 +34,8 @@ public class Column {
 		Ordinal = ordinal;
 		Order = order;
 		
-		if(type.equals(Id.class))
-			IsIdColumn = true;
+		IsIdColumn = type.equals(Id.class) || type.equals(PrimaryId.class);
+		IsPrimaryIdColumn = type.equals(PrimaryId.class);
 	}
 	
 	public String toString()

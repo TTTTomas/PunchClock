@@ -71,14 +71,14 @@ public class SQLiteHelper {
 	
 	public static <E extends IEntity> SQLiteStatement createUpdateStatement(SQLiteDatabase database, ColumnCollection<E> columns, String tableName)
 	{
-		String[] columnsWithoutIdColumn = Strings.removeOne(columns.IdColumn.Name, columns.getColumnNames());
+		String[] columnsWithoutIdColumn = Strings.removeOne(columns.PrimaryIdColumn.Name, columns.getColumnNames());
 		
 		String parameters = Strings.join(columnsWithoutIdColumn, "=?, ");
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("UPDATE ").append(tableName)
 			.append(" SET ").append(parameters)
-			.append(" WHERE ").append(columns.IdColumn).append("=?");
+			.append(" WHERE ").append(columns.PrimaryIdColumn).append("=?");
 		
 		String sql = sb.toString();
 

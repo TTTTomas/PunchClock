@@ -32,7 +32,7 @@ public class Table<E extends EntityBase> implements ITable<E>{
 		_entityType = (Class<E>) Reflect.getGenericType(getClass());
 		_database = database;
 		_columns = ColumnHelper.getColumnsFromEntityType(_entityType);
-		IdColumn = _columns.IdColumn.Name;
+		IdColumn = _columns.PrimaryIdColumn.Name;
 	}
 	
 	public void createTable()
@@ -47,7 +47,7 @@ public class Table<E extends EntityBase> implements ITable<E>{
 
 	public E select(int id) {
 
-		Cursor cursor = SQLiteHelper.selectById(_database, _columns, _columns.IdColumn, id, TableName);
+		Cursor cursor = SQLiteHelper.selectById(_database, _columns, _columns.PrimaryIdColumn, id, TableName);
 		
 		if(cursor == null)
 			return null;
