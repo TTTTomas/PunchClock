@@ -1,4 +1,4 @@
-package se.kingharvest.infrastructure.data;
+package se.kingharvest.infrastructure.data.sqlite;
 
 import se.kingharvest.infrastructure.data.columns.Column;
 import se.kingharvest.infrastructure.data.columns.ColumnCollection;

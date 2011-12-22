@@ -1,6 +1,6 @@
 package se.kingharvest.infrastructure.data.columns;
 
-import se.kingharvest.infrastructure.data.SQLiteHelper;
+import se.kingharvest.infrastructure.data.sqlite.SQLiteHelper;
 import se.kingharvest.infrastructure.data.types.Id;
 
 public class Column {

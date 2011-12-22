@@ -5,6 +5,7 @@ import java.lang.reflect.Array;
 import se.kingharvest.infrastructure.data.columns.ColumnCollection;
 import se.kingharvest.infrastructure.data.columns.ColumnHelper;
 import se.kingharvest.infrastructure.data.entity.EntityHelper;
+import se.kingharvest.infrastructure.data.sqlite.SQLiteHelper;
 import se.kingharvest.infrastructure.entity.EntityBase;
 import se.kingharvest.infrastructure.system.Reflect;
 import android.database.Cursor;
@@ -16,10 +17,10 @@ public class Table<E extends EntityBase> implements ITable<E>{
 	public final String TableName;
 	public final String IdColumn;
 	
-	final Class<E> _entityType;
-	final SQLiteDatabase _database;
+	protected final Class<E> _entityType;
+	protected final SQLiteDatabase _database;
 	
-	final ColumnCollection<E> _columns;
+	protected final ColumnCollection<E> _columns;
 	
 	public SQLiteStatement _insertStatement;
 	public SQLiteStatement _updateStatement;
@@ -103,6 +104,18 @@ public class Table<E extends EntityBase> implements ITable<E>{
 		EntityHelper.bindEntityToStatement(entity, _insertStatement, _columns);
 		long id = _insertStatement.executeInsert();
 		return id;
+	}
+
+	/**
+	 * Creates a single entity from a cursor.
+	 * Closes the cursor when done.
+	 * @param cursor
+	 * @return
+	 */
+	protected E returnEntityFromCursor(Cursor cursor) {
+		E entity = EntityHelper.createEntityFromCursor(cursor, _columns, _entityType);
+		cursor.close();
+		return entity;
 	}
 
 }

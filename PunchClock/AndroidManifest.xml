@@ -14,7 +14,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="se.kingharvest.punchclock.pages.EntriesPage"/>
+        <activity android:name=".pages.EntriesPage"/>
 
     </application>
 </manifest>

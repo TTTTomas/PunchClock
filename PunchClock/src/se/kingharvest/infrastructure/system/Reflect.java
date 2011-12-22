@@ -1,7 +1,6 @@
 package se.kingharvest.infrastructure.system;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.Date;
@@ -53,15 +52,20 @@ public class Reflect {
 		return method;
 	}
 
+	public static <T, A> T newInstance(Class<T> type, Class<A> argClass, A argument)
+	{
+		Constructor<T> constructor = getConstructor(type, argClass);
+		T newObject = newInstance(constructor, argument);
+		return newObject;
+	}
+	
 	public static <T> Constructor<T> getConstructor(Class<T> type, Class<?> ... argClass)
 	{
 		Constructor<T> constructor = null;
 		try {
 			constructor = type.getConstructor(argClass);
-		} catch (SecurityException e) {
-			throw new ReflectException(e.getMessage(), e);
-		} catch (NoSuchMethodException e) {
-			throw new ReflectException(e.getMessage(), e);
+		} catch (Exception e) {
+			throw new ReflectException("Failed to get constructor of type " + type, e);
 		}
 		return constructor;
 	}
@@ -77,10 +81,8 @@ public class Reflect {
 	{
 		try {
 			return method.invoke(object, args);
-		} catch (IllegalAccessException e) {
-			throw new ReflectException(e.getMessage(), e);
-		} catch (InvocationTargetException e) {
-			throw new ReflectException(e.getMessage(), e);
+		} catch (Exception e) {
+			throw new ReflectException("Failed to call method " + method.getName() + " of object of type " + object.getClass().getSimpleName(), e);
 		}
 	}
 
@@ -91,7 +93,7 @@ public class Reflect {
 			instance = type.newInstance();
 		}
 		catch(Exception e){
-			throw new ReflectException(e.getMessage(), e);
+			throw new ReflectException("Failed to create new instance of type " + type, e);
 		}
 		return instance;
 	}

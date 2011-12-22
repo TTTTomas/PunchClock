@@ -2,9 +2,8 @@ package se.kingharvest.punchclock.model;
 
 import java.util.Date;
 
-import se.kingharvest.infrastructure.data.DalFactory;
-import se.kingharvest.infrastructure.data.ITable;
 import se.kingharvest.infrastructure.time.TimeSpan;
+import se.kingharvest.punchclock.data.WorkPeriodTable;
 import se.kingharvest.punchclock.entity.Project;
 import se.kingharvest.punchclock.entity.WorkPeriod;
 
@@ -24,8 +23,7 @@ public class PunchHandler {
 		period.ProjectId = project.getId();
 		period.Location = project.Location;
 		
-		ITable<WorkPeriod> table = DalFactory.getInstance().getDal(WorkPeriod.class);
-		table.insert(period);
+		WorkPeriodTable.getTable().insert(period);
 	}
 
 	public static void stopPeriod(WorkPeriod periodInProgress) {
@@ -33,8 +31,9 @@ public class PunchHandler {
 	}
 
 	public static WorkPeriod getPeriodInProgress() {
-		// TODO Auto-generated method stub
-		return null;
+
+		WorkPeriod period = WorkPeriodTable.getTable().selectPeriodInProgress();
+		return period;
 	}
 
 	public static TimeSpan getBreakTime(Project _currentProject) {
