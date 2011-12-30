@@ -39,6 +39,13 @@ public class ButtonEx extends ViewExBase<Button, ButtonEx> {
 		return this;
 	}
 	
+	public ButtonEx setEnabled(boolean enabled)
+	{
+		_view.setEnabled(enabled);
+		return this;
+	}
+	
+	
 	/**
 	 * Sets the click event.
 	 * @param listener

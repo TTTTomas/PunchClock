@@ -2,7 +2,7 @@ package se.kingharvest.infrastructure.data.types;
 
 public class PrimaryId extends Id {
 
-	public PrimaryId(int id) {
+	public PrimaryId(long id) {
 		super(id);
 	}
 

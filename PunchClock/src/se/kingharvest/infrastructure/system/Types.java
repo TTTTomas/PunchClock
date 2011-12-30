@@ -3,6 +3,9 @@ package se.kingharvest.infrastructure.system;
 import java.io.Serializable;
 import java.util.Date;
 
+import se.kingharvest.infrastructure.data.types.Id;
+import se.kingharvest.infrastructure.data.types.PrimaryId;
+
 /**
  * Contains type detection for all primitive types plus String and Date.
  */
@@ -182,5 +185,13 @@ public class Types {
 
 	public static boolean isVoid(String type) {
 		return type.equals(Void.class.getSimpleName());
+	}
+
+	public static boolean isId(Class<?> type) {
+		return type.equals(Id.class);
+	}
+
+	public static boolean isPrimaryId(Class<?> type) {
+		return type.equals(PrimaryId.class);
 	}
 }

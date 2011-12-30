@@ -2,8 +2,9 @@ package se.kingharvest.punchclock.model;
 
 import java.util.Date;
 
+import se.kingharvest.infrastructure.data.types.Id;
 import se.kingharvest.infrastructure.time.DateTime;
-import se.kingharvest.infrastructure.time.TimeSpan;
+import se.kingharvest.punchclock.data.ProjectTable;
 import se.kingharvest.punchclock.data.WorkPeriodTable;
 import se.kingharvest.punchclock.entity.Project;
 import se.kingharvest.punchclock.entity.WorkPeriod;
@@ -49,12 +50,7 @@ public class PunchHandler {
 		return period;
 	}
 
-	public static TimeSpan getBreakTime(Project currentProject) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public static void insertBreakInPeriod(WorkPeriod periodInProgress, TimeSpan breakTime) {
+	public static void insertBreakInPeriod(WorkPeriod periodInProgress, long breakTime) {
 		
 		stopPeriod(periodInProgress);
 		WorkPeriod nextPeriod = periodInProgress.copy();
@@ -63,6 +59,12 @@ public class PunchHandler {
 		nextPeriod.InProgress = true;
 		
 		WorkPeriodTable.getTable().insert(nextPeriod);
+	}
+
+	public static Project getProject(Id projectId) {
+		
+		Project project = ProjectTable.getTable().select(projectId.get());
+		return project;
 	}
 
 }

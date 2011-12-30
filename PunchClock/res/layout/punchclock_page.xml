@@ -7,16 +7,20 @@
 
 <Button 
 	android:text="Start" 
-	android:id="@+id/punchclock_start_button" 
+	android:id="@+id/Punchclock_StartButton" 
 	android:layout_width="fill_parent" 
 	android:layout_height="wrap_content"
+
+	android:layout_above="@+id/Punchclock_BreakButton"
 	/>
 
 <Button 
 	android:text="Break" 
-	android:id="@+id/punchclock_break_button" 
+	android:id="@+id/Punchclock_BreakButton" 
 	android:layout_width="fill_parent" 
 	android:layout_height="wrap_content"
+	
+	android:layout_alignParentBottom="true"
 	/>
 	
 <TextView 
@@ -24,6 +28,8 @@
 	android:id="@+id/punchclock_status_text" 
 	android:layout_width="fill_parent" 
 	android:layout_height="wrap_content"
+
+	android:layout_above="@+id/Punchclock_StartButton"
 	/>
 
 </RelativeLayout>

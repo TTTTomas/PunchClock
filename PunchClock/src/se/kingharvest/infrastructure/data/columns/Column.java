@@ -3,6 +3,7 @@ package se.kingharvest.infrastructure.data.columns;
 import se.kingharvest.infrastructure.data.sqlite.SQLiteHelper;
 import se.kingharvest.infrastructure.data.types.Id;
 import se.kingharvest.infrastructure.data.types.PrimaryId;
+import android.text.TextUtils;
 
 public class Column {
 	
@@ -41,7 +42,7 @@ public class Column {
 	public String toString()
 	{
 		String indexStr = IsIdColumn ? SQLiteHelper.getIndexString(Name, Ordinal) : "";
-		String str = Name + " " + SQLiteHelper.toSqliteType(Type) + " " + indexStr;
+		String str = Name + " " + SQLiteHelper.toSqliteType(Type) + (TextUtils.isEmpty(indexStr) ? "" : " " + indexStr);
 		return str;
 	}
 }

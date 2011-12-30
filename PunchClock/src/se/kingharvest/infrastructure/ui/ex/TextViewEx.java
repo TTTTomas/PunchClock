@@ -30,6 +30,11 @@ public class TextViewEx extends ViewExBase<TextView, TextViewEx> {
 		return this;
 	}
 
+	public String getText()
+	{
+		return _view.getText().toString();
+	}
+
 	public TextViewEx bindText(StringProperty textProperty)
 	{
 		final TextView realView = _view;

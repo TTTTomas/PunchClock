@@ -14,6 +14,7 @@ public  class DialogBase extends Dialog implements ILayoutBinder{
 	public DialogBase(ActivityBase<?,?> context) {
 		super(context);
 		context.manageDialog(this);
+		setContentView(getContentView());
 	}
 
 	public ViewEx getView(int id) {
@@ -26,6 +27,10 @@ public  class DialogBase extends Dialog implements ILayoutBinder{
 
 	public SpinnerEx getSpinner(int id) {
 		return LayoutBinder.getSpinner(this, id);
+	}
+
+	public TextViewEx getTextView(int id) {
+		return LayoutBinder.getTextView(this, id);
 	}
 
 	/**
@@ -42,10 +47,5 @@ public  class DialogBase extends Dialog implements ILayoutBinder{
 	public int getContentView() {
 		// TODO Auto-generated method stub
 		return 0;
-	}
-
-	public TextViewEx getTextView(int id) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

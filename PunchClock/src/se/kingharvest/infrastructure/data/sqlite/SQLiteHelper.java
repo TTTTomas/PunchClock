@@ -2,7 +2,6 @@ package se.kingharvest.infrastructure.data.sqlite;
 
 import se.kingharvest.infrastructure.data.columns.Column;
 import se.kingharvest.infrastructure.data.columns.ColumnCollection;
-import se.kingharvest.infrastructure.data.types.Id;
 import se.kingharvest.infrastructure.entity.IEntity;
 import se.kingharvest.infrastructure.system.Strings;
 import se.kingharvest.infrastructure.system.Types;
@@ -24,7 +23,7 @@ public class SQLiteHelper {
 		database.execSQL(sql);
 	}
 
-	public static int delete(SQLiteDatabase database, String tableName, String idColumn, int id) {
+	public static int delete(SQLiteDatabase database, String tableName, String idColumn, long id) {
 		return database.delete(tableName, idColumn + "=?", new String[]{ String.valueOf(id) });
 	}
 
@@ -40,16 +39,16 @@ public class SQLiteHelper {
 		
 		if(Types.isBoolean(type) || Types.isInteger(type) || Types.isLong(type) || Types.isShort(type) || Types.isByte(type))
 			return "INTEGER";
+		else if(Types.isId(type) || Types.isPrimaryId(type))
+			return "INTEGER";
 		else if(Types.isString(type) || Types.isChar(type))
 			return "TEXT";
 		else if(Types.isDouble(type) || Types.isFloat(type))
 			return "REAL";
-		else if(type.equals(Id.class))
-			return "INTEGER ";
 		else if(Types.isDate(type))
-			return "TEXT ";
+			return "TEXT";
 		else if(Types.isByteArray(type))
-			return "BLOB ";
+			return "BLOB";
 		
 		throw new IllegalArgumentException("Type " + type + " is not a valid Sqlite type.");
 	}
@@ -64,7 +63,7 @@ public class SQLiteHelper {
 		return c;
 	}
 
-	public static <E extends IEntity> Cursor selectById(SQLiteDatabase database, ColumnCollection<E> columns, Column idColumn, int id, String tableName) {
+	public static <E extends IEntity> Cursor selectById(SQLiteDatabase database, ColumnCollection<E> columns, Column idColumn, long id, String tableName) {
 		Cursor c = database.query(tableName, columns.getColumnNames(), idColumn + "=", new String[]{ String.valueOf(id) }, null, null, columns.getSortedColumnsAsString());
 		return c;
 	}
@@ -99,6 +98,11 @@ public class SQLiteHelper {
 
 		SQLiteStatement statement = database.compileStatement(sql);
 		return statement;
+	}
+
+	public static boolean tableExists(SQLiteDatabase _database, String tableName) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

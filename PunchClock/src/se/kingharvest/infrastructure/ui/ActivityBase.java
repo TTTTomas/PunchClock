@@ -206,6 +206,13 @@ public abstract class ActivityBase<V extends IView<?>, VM extends IViewModel>
 	
 	/* IDialogManager */
 
+
+	public <D extends DialogBase> void showDialog(D dialog) {
+		
+		Reflect.call(this, "prepareDialog", dialog);
+		dialog.show();
+	}
+
 	/**
 	 * Adds a dialog to be managed by this activity.
 	 * Managed dialogs will be dismissed when the activity gets destroyed.

@@ -11,7 +11,7 @@ public class EntityBase implements IEntity{
 		return Id;
 	}
 
-	void setId(int id) {
+	public void setId(long id) {
 		Id.set(id);
 	}
 }

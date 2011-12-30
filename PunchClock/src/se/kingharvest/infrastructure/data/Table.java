@@ -35,6 +35,11 @@ public class Table<E extends EntityBase> implements ITable<E>{
 		IdColumn = _columns.PrimaryIdColumn.Name;
 	}
 	
+	public boolean tableExists()
+	{
+		return SQLiteHelper.tableExists(_database, TableName);
+	}
+
 	public void createTable()
 	{
 		SQLiteHelper.createTable(_database, TableName, _columns);
@@ -45,7 +50,7 @@ public class Table<E extends EntityBase> implements ITable<E>{
 		SQLiteHelper.dropTable(_database, TableName);
 	}
 
-	public E select(int id) {
+	public E select(long id) {
 
 		Cursor cursor = SQLiteHelper.selectById(_database, _columns, _columns.PrimaryIdColumn, id, TableName);
 		
@@ -74,15 +79,16 @@ public class Table<E extends EntityBase> implements ITable<E>{
 		return entities;
 	}
 
-	public int delete(int id) {
+	public int delete(long id) {
 		return SQLiteHelper.delete(_database, TableName, IdColumn, id);
 	}
 
+	private Object _updateStatementLock = new Object();
 	public long update(E entity) {
 
 		// Use a reusable update statement. Create it if it doesn't exist.
 		if (_updateStatement == null){
-			synchronized(_updateStatement){
+			synchronized(_updateStatementLock){
 				_updateStatement = SQLiteHelper.createUpdateStatement(_database, _columns, TableName);				
 			}
 		}
@@ -92,18 +98,20 @@ public class Table<E extends EntityBase> implements ITable<E>{
 		return id;
 	}
 
-	public long insert(E entity) {
+	private Object _insertStatementLock = new Object();
+	public E insert(E entity) {
 		
 		// Use a reusable insert statement. Create it if it doesn't exist.
 		if (_insertStatement == null){
-			synchronized(_insertStatement){
+			synchronized(_insertStatementLock){
 				_insertStatement = SQLiteHelper.createInsertStatement(_database, _columns, TableName);				
 			}
 		}
 		
 		EntityHelper.bindEntityToStatement(entity, _insertStatement, _columns);
 		long id = _insertStatement.executeInsert();
-		return id;
+		entity.setId(id);
+		return entity;
 	}
 
 	/**

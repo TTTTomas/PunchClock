@@ -2,8 +2,10 @@ package se.kingharvest.punchclock;
 
 import se.kingharvest.infrastructure.ui.ActivityBase;
 import se.kingharvest.infrastructure.ui.annotation.OnClick;
-import se.kingharvest.punchclock.dialogs.AskForJobDialog;
-import se.kingharvest.punchclock.dialogs.AskForJobDialog.OnNewJobOkListener;
+import se.kingharvest.punchclock.PunchClockViewModel.PunchClockState;
+import se.kingharvest.punchclock.dialogs.NewProjectDialog;
+import se.kingharvest.punchclock.dialogs.NewProjectDialog.OnNewProjectOkListener;
+import se.kingharvest.punchclock.entity.Project;
 import android.view.View;
 
 
@@ -22,44 +24,68 @@ public class PunchClockActivity extends ActivityBase<PunchClockActivity, PunchCl
 
 	public void bindView()
     {		
-        getButton(R.id.punchclock_start_button)
+        getButton(R.id.Punchclock_StartButton)
     		.bindOnClick(this);
 
-        getButton(R.id.punchclock_break_button)
+        getButton(R.id.Punchclock_BreakButton)
     		.bindOnClick(this);
     }
 
 	public void bindViewModel() 
 	{
-		getButton(R.id.punchclock_start_button)
-        	.bindText(_viewModel.StartButtonText);
-
 		getTextView(R.id.punchclock_status_text)
         	.bindText(_viewModel.StatusText);
 	}	
 	
-	@OnClick(R.id.punchclock_start_button)
+	@OnClick(R.id.Punchclock_StartButton)
 	public void startClicked(View button)
 	{
 		_viewModel.startOrStopCurrentProject();
 	}
 
-	@OnClick(R.id.punchclock_break_button)
+	@OnClick(R.id.Punchclock_BreakButton)
 	public void breakClicked(View v)
 	{
 		_viewModel.breakCurrentJob();
 	}
 
+	public void setState(PunchClockState state) {
+		
+		switch (state) {
+		case Start:
+			getButton(R.id.Punchclock_StartButton).setText("Stop");
+			getButton(R.id.Punchclock_BreakButton).setEnabled(false);
+			break;
+
+		case Stop:
+			getButton(R.id.Punchclock_StartButton).setText("Start");
+			getButton(R.id.Punchclock_BreakButton).setEnabled(true);
+			break;
+
+		}
+		// TODO Auto-generated method stub	
+	}
+	
 	public void askForJob() {
 		
-		AskForJobDialog dialog = new AskForJobDialog(this, onNewJobOk());
-		dialog.show();
+		NewProjectDialog dialog = new NewProjectDialog(this);
+		showDialog(dialog);
 	}
 
-	private OnNewJobOkListener onNewJobOk() {
+	private OnNewProjectOkListener onNewProjectOk() {
 		
-		return null;
+		return new OnNewProjectOkListener() {
+			public void newProjectOk(Project newProject) {
+				_viewModel.setNewProject(newProject);
+			}
+		};
 	}
+	
+	public void prepareDialog(NewProjectDialog dialog)
+	{
+		dialog.setOnNewJobOkListener(onNewProjectOk());
+	}
+
 	
 //	@OnClick(R.id.punchclock_go_to_entries)
 //	public void goToEntries(View button)

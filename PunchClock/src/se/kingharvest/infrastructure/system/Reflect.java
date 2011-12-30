@@ -77,6 +77,23 @@ public class Reflect {
 	 * @param args
 	 * @return
 	 */
+	public static Object call(Object object, String methodName, Object arg)
+	{
+		Method method = Reflect.getMethod(object, "prepareDialog", arg.getClass());
+		try {
+			return method.invoke(object, arg);
+		} catch (Exception e) {
+			throw new ReflectException("Failed to call method " + method.getName() + " of object of type " + object.getClass().getSimpleName(), e);
+		}
+	}
+
+	/**
+	 * Calls a Method, wrapping any exceptions.
+	 * @param object
+	 * @param method
+	 * @param args
+	 * @return
+	 */
 	public static Object call(Object object, Method method, Object ... args)
 	{
 		try {

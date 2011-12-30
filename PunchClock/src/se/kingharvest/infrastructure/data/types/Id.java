@@ -2,18 +2,18 @@ package se.kingharvest.infrastructure.data.types;
 
 public class Id {
 	
-	private int _id;
+	private long _id;
 
-	public Id(int id) {
+	public Id(long id) {
 		_id = id;
 	}
 	
-	public void set(int id)
+	public void set(long id)
 	{
 		_id = id;
 	}
 
-	public int get()
+	public long get()
 	{
 		return _id;
 	}
