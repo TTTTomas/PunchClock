@@ -1,21 +1,27 @@
 package se.kingharvest.punchclock.application;
 
-import se.kingharvest.infrastructure.data.TableFactory;
+import se.kingharvest.infrastructure.data.Database;
+import se.kingharvest.punchclock.data.ProjectTable;
+import se.kingharvest.punchclock.data.WorkPeriodTable;
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 
 
 public class PunchClockDatabase {
 
-	SQLiteOpenHelper _database;
+	Database _database;
 	
-	public PunchClockDatabase()
+	public static final String PUNCHCLOCK_DATABASE_NAME = "PunchClockDatabase.sqlite";
+	public static final int PUNCHCLOCK_DATABASE_VERSION_CURRENT = 1;
+	
+	public PunchClockDatabase(Context context)
 	{
-		TableFactory.getInstance().setDatabase(getSQLiteDatabase());
-		//DalFactory.registerDal(WorkPeriodDal.class);
-		ProjectTable.getTable().dropTable();
-		ProjectTable.getTable().createTable();
+		_database = new Database(context, PUNCHCLOCK_DATABASE_NAME, PUNCHCLOCK_DATABASE_VERSION_CURRENT);
 
+		_database.addTable(ProjectTable.getTable());
+		_database.addTable(WorkPeriodTable.getTable());
+		
+		_database.createTablesIfNeeded();
 	}
 
 	public SQLiteDatabase getSQLiteDatabase() {

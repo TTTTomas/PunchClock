@@ -71,6 +71,13 @@ public class ColumnCollection<E extends IEntity> {
 		return _columnNames;
 	}
 
+	public String getColumnNamesAsString()
+	{
+		if (_columnNamesAsString == null)
+			_columnNamesAsString = Strings.join(_columnNames, ", ");
+		return _columnNamesAsString;
+	}
+
 	public String getSortedColumnsAsString() {
 		return null;
 	}

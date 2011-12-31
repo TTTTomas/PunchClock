@@ -4,13 +4,12 @@ import java.util.HashMap;
 
 import se.kingharvest.infrastructure.entity.IEntity;
 import se.kingharvest.infrastructure.system.Reflect;
-import android.database.sqlite.SQLiteDatabase;
 
 public class TableFactory implements ITableFactory{
 
 	static TableFactory _instance;
 	
-	static SQLiteDatabase _database;
+	static Database _database;
 	
 	private HashMap<Class<ITable<IEntity>>, ITable<IEntity>> _tableCache;
 
@@ -29,7 +28,7 @@ public class TableFactory implements ITableFactory{
 		if(_tableCache.containsKey(contract))
 			return (T) _tableCache.get(contract);
 
-		T dal = Reflect.newInstance(contract, SQLiteDatabase.class, _database);
+		T dal = Reflect.newInstance(contract, Database.class, _database);
 		_tableCache.put((Class<ITable<IEntity>>)contract, (ITable<IEntity>)dal);
 		return dal;
 	}
@@ -42,7 +41,7 @@ public class TableFactory implements ITableFactory{
 		return _instance;
 	}
 
-	public void setDatabase(SQLiteDatabase database) {
+	public void setDatabase(Database database) {
 		// Changing the database invalidates the cache.
 		_tableCache = null;
 		_database = database;

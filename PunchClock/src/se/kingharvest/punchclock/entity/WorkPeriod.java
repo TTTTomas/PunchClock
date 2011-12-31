@@ -10,7 +10,7 @@ public class WorkPeriod extends EntityBase {
 	public Date Start;
 	public Date Stop;
 	public Id ProjectId;
-	public Id[] Activities;
+	//public Id[] Activities;
 	public Id Location;
 	public String Note;
 	public boolean InProgress;
@@ -24,7 +24,7 @@ public class WorkPeriod extends EntityBase {
 
 		WorkPeriod period = new WorkPeriod();
 		period.ProjectId = ProjectId;
-		period.Activities = Activities.clone();
+		//period.Activities = Activities.clone();
 		period.Location = Location;
 		period.Note = period.Note;
 		

@@ -8,6 +8,7 @@ import se.kingharvest.infrastructure.system.Types;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
+import android.text.TextUtils;
 
 public class SQLiteHelper {
 	
@@ -91,7 +92,7 @@ public class SQLiteHelper {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("INSERT INTO ").append(tableName)
-			.append(" (").append(columns.getColumnsAsString()).append(")")
+			.append(" (").append(columns.getColumnNamesAsString()).append(")")
 			.append(" VALUES (").append(parameters).append(")");
 		
 		String sql = sb.toString();
@@ -100,9 +101,43 @@ public class SQLiteHelper {
 		return statement;
 	}
 
-	public static boolean tableExists(SQLiteDatabase _database, String tableName) {
-		// TODO Auto-generated method stub
+	public static boolean tableExists(SQLiteDatabase database, String tableName) {
+
+		String sql = "SELECT name FROM sqlite_master WHERE type='table' AND name=?";
+		Cursor cursor = database.rawQuery(sql, new String[]{ tableName });
+		
+		boolean result = !TextUtils.isEmpty(getString(cursor));
+		cursor.close();
+		return result;
+	}
+
+	/**
+	 * Returns a single value from a cursor as a boolean.
+	 * @param cursor
+	 * @return
+	 */
+	private static boolean getBoolean(Cursor cursor) {
+		
+		if(cursor != null){
+			if (cursor.moveToFirst()){
+				return cursor.getInt(0) != 0;
+			}
+		}
 		return false;
 	}
 
+	/**
+	 * Returns a single value from a cursor as a String.
+	 * @param cursor
+	 * @return
+	 */
+	private static String getString(Cursor cursor) {
+		
+		if(cursor != null){
+			if (cursor.moveToFirst()){
+				return cursor.getString(0);
+			}
+		}
+		return "";
+	}
 }

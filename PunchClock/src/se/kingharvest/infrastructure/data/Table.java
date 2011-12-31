@@ -9,7 +9,6 @@ import se.kingharvest.infrastructure.data.sqlite.SQLiteHelper;
 import se.kingharvest.infrastructure.entity.EntityBase;
 import se.kingharvest.infrastructure.system.Reflect;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 
 public class Table<E extends EntityBase> implements ITable<E>{
@@ -18,7 +17,7 @@ public class Table<E extends EntityBase> implements ITable<E>{
 	public final String IdColumn;
 	
 	protected final Class<E> _entityType;
-	protected final SQLiteDatabase _database;
+	protected final Database _database;
 	
 	protected final ColumnCollection<E> _columns;
 	
@@ -26,7 +25,7 @@ public class Table<E extends EntityBase> implements ITable<E>{
 	public SQLiteStatement _updateStatement;
 	
 	@SuppressWarnings("unchecked")
-	public Table(String tableName, SQLiteDatabase database)
+	public Table(String tableName, Database database)
 	{
 		TableName = tableName;
 		_entityType = (Class<E>) Reflect.getGenericType(getClass());
@@ -37,22 +36,27 @@ public class Table<E extends EntityBase> implements ITable<E>{
 	
 	public boolean tableExists()
 	{
-		return SQLiteHelper.tableExists(_database, TableName);
+		return SQLiteHelper.tableExists(_database.getWritableDatabase(), TableName);
 	}
 
 	public void createTable()
 	{
-		SQLiteHelper.createTable(_database, TableName, _columns);
+		SQLiteHelper.createTable(_database.getWritableDatabase(), TableName, _columns);
 	}
 	
+	public void createTableIfNeeded() {
+		if(!tableExists())
+			createTable();
+	}
+
 	public void dropTable()
 	{
-		SQLiteHelper.dropTable(_database, TableName);
+		SQLiteHelper.dropTable(_database.getWritableDatabase(), TableName);
 	}
 
 	public E select(long id) {
 
-		Cursor cursor = SQLiteHelper.selectById(_database, _columns, _columns.PrimaryIdColumn, id, TableName);
+		Cursor cursor = SQLiteHelper.selectById(_database.getReadableDatabase(), _columns, _columns.PrimaryIdColumn, id, TableName);
 		
 		if(cursor == null)
 			return null;
@@ -65,7 +69,7 @@ public class Table<E extends EntityBase> implements ITable<E>{
 	@SuppressWarnings("unchecked")
 	public E[] selectAll() {
 		
-		Cursor cursor = SQLiteHelper.selectAll(_database, _columns, TableName);
+		Cursor cursor = SQLiteHelper.selectAll(_database.getWritableDatabase(), _columns, TableName);
 		
 		if(cursor == null)
 			return (E[]) Array.newInstance(_entityType, 0);
@@ -80,7 +84,7 @@ public class Table<E extends EntityBase> implements ITable<E>{
 	}
 
 	public int delete(long id) {
-		return SQLiteHelper.delete(_database, TableName, IdColumn, id);
+		return SQLiteHelper.delete(_database.getWritableDatabase(), TableName, IdColumn, id);
 	}
 
 	private Object _updateStatementLock = new Object();
@@ -89,7 +93,7 @@ public class Table<E extends EntityBase> implements ITable<E>{
 		// Use a reusable update statement. Create it if it doesn't exist.
 		if (_updateStatement == null){
 			synchronized(_updateStatementLock){
-				_updateStatement = SQLiteHelper.createUpdateStatement(_database, _columns, TableName);				
+				_updateStatement = SQLiteHelper.createUpdateStatement(_database.getWritableDatabase(), _columns, TableName);				
 			}
 		}
 
@@ -104,7 +108,7 @@ public class Table<E extends EntityBase> implements ITable<E>{
 		// Use a reusable insert statement. Create it if it doesn't exist.
 		if (_insertStatement == null){
 			synchronized(_insertStatementLock){
-				_insertStatement = SQLiteHelper.createInsertStatement(_database, _columns, TableName);				
+				_insertStatement = SQLiteHelper.createInsertStatement(_database.getWritableDatabase(), _columns, TableName);				
 			}
 		}
 		
@@ -125,5 +129,4 @@ public class Table<E extends EntityBase> implements ITable<E>{
 		cursor.close();
 		return entity;
 	}
-
 }

@@ -1,6 +1,5 @@
 package se.kingharvest.punchclock.application;
 
-import se.kingharvest.infrastructure.data.TableFactory;
 import android.app.Application;
 
 public class ClientContext extends Application{
@@ -18,8 +17,7 @@ public class ClientContext extends Application{
 	}
 	
 	public void onCreate() {
-		_database = new PunchClockDatabase();
-		TableFactory.getInstance().setDatabase(_database.getSQLiteDatabase());
+		_database = new PunchClockDatabase(this);
 	};
 	
 	public PunchClockDatabase getDatabase(){
