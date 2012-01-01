@@ -18,7 +18,7 @@ public interface ITable<E extends IEntity> {
 	
 	int delete(long id);
 	
-	long update(E entity);
+	void update(E entity);
 	
 	E insert(E entity);
 

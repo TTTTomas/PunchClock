@@ -1,6 +1,13 @@
 package se.kingharvest.punchclock.entity;
 
-public class ExportRecipient {
+import se.kingharvest.infrastructure.entity.EntityBase;
+
+public class ExportRecipient extends EntityBase{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2144559477459283156L;
 
 	public enum ExportType
 	{

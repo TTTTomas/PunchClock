@@ -8,6 +8,11 @@ import se.kingharvest.infrastructure.time.DateTime;
 
 public class Project extends EntityBase{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5312794964868996572L;
+
 	public Project() {
 		
 	}

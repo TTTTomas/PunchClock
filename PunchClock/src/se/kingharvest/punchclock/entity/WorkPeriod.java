@@ -7,6 +7,11 @@ import se.kingharvest.infrastructure.entity.EntityBase;
 
 public class WorkPeriod extends EntityBase {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4656657479432857086L;
+
 	public Date Start;
 	public Date Stop;
 	public Id ProjectId;

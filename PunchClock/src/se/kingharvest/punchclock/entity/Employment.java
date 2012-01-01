@@ -7,6 +7,11 @@ import se.kingharvest.infrastructure.entity.EntityBase;
 
 public class Employment extends EntityBase{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6159096457901198384L;
+
 	public enum SalaryFrequency{
 		PerHour,
 		PerDay,

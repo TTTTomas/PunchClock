@@ -1,9 +1,16 @@
 package se.kingharvest.infrastructure.entity;
 
+import java.io.Serializable;
+
 import se.kingharvest.infrastructure.data.types.PrimaryId;
 
 
-public class EntityBase implements IEntity{
+public class EntityBase implements IEntity, Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7848219534546131562L;
 
 	public PrimaryId Id = new PrimaryId(0);
 	

@@ -1,6 +1,5 @@
 package se.kingharvest.infrastructure.data.sqlite;
 
-import se.kingharvest.infrastructure.data.columns.Column;
 import se.kingharvest.infrastructure.data.columns.ColumnCollection;
 import se.kingharvest.infrastructure.entity.IEntity;
 import se.kingharvest.infrastructure.system.Strings;
@@ -66,8 +65,8 @@ public class SQLiteHelper {
 		return c;
 	}
 
-	public static <E extends IEntity> Cursor selectById(SQLiteDatabase database, ColumnCollection<E> columns, Column idColumn, long id, String tableName) {
-		Cursor c = database.query(tableName, columns.getColumnNames(), idColumn + "=", new String[]{ String.valueOf(id) }, null, null, columns.getSortedColumnsAsString());
+	public static <E extends IEntity> Cursor selectById(SQLiteDatabase database, ColumnCollection<E> columns, long id, String tableName) {
+		Cursor c = database.query(tableName, columns.getColumnNames(), columns.PrimaryIdColumn.Name + "=?", new String[]{ String.valueOf(id) }, null, null, columns.getSortedColumnsAsString());
 		return c;
 	}
 	
@@ -118,6 +117,7 @@ public class SQLiteHelper {
 	 * @param cursor
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private static boolean getBoolean(Cursor cursor) {
 		
 		if(cursor != null){

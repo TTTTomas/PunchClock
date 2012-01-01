@@ -1,7 +1,14 @@
 package se.kingharvest.infrastructure.data.types;
 
-public class Id {
+import java.io.Serializable;
+
+public class Id implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 9216451097485760854L;
+
 	private long _id;
 
 	public Id(long id) {

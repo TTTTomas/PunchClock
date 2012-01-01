@@ -4,6 +4,11 @@ import se.kingharvest.infrastructure.entity.EntityBase;
 
 public class Activity extends EntityBase {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8096321038451743208L;
+
 	public enum ActivityScope
 	{
 		Global,

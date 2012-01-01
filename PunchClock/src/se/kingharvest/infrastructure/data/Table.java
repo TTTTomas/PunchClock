@@ -56,7 +56,7 @@ public class Table<E extends EntityBase> implements ITable<E>{
 
 	public E select(long id) {
 
-		Cursor cursor = SQLiteHelper.selectById(_database.getReadableDatabase(), _columns, _columns.PrimaryIdColumn, id, TableName);
+		Cursor cursor = SQLiteHelper.selectById(_database.getReadableDatabase(), _columns, id, TableName);
 		
 		if(cursor == null)
 			return null;
@@ -69,7 +69,7 @@ public class Table<E extends EntityBase> implements ITable<E>{
 	@SuppressWarnings("unchecked")
 	public E[] selectAll() {
 		
-		Cursor cursor = SQLiteHelper.selectAll(_database.getWritableDatabase(), _columns, TableName);
+		Cursor cursor = SQLiteHelper.selectAll(_database.getReadableDatabase(), _columns, TableName);
 		
 		if(cursor == null)
 			return (E[]) Array.newInstance(_entityType, 0);
@@ -88,7 +88,7 @@ public class Table<E extends EntityBase> implements ITable<E>{
 	}
 
 	private Object _updateStatementLock = new Object();
-	public long update(E entity) {
+	public void update(E entity) {
 
 		// Use a reusable update statement. Create it if it doesn't exist.
 		if (_updateStatement == null){
@@ -98,8 +98,7 @@ public class Table<E extends EntityBase> implements ITable<E>{
 		}
 
 		EntityHelper.bindEntityToStatement(entity, _updateStatement, _columns);
-		long id = _updateStatement.executeInsert();
-		return id;
+		_updateStatement.execute();
 	}
 
 	private Object _insertStatementLock = new Object();

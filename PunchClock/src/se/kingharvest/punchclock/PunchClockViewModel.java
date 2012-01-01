@@ -26,14 +26,28 @@ public class PunchClockViewModel extends ViewModelBase<PunchClockActivity, Punch
 	
 	public PunchClockViewModel(PunchClockActivity view) {
     	super(view);
-    	_view.setState(PunchClockState.Stop);
+    	updateState();
 	}
     
+	private void updateState()
+	{
+		WorkPeriod periodInProgress = PunchHandler.getPeriodInProgress();
+		if(periodInProgress == null)
+		{
+	    	_view.setState(PunchClockState.Stop);
+		}
+		else
+		{
+			_currentProject = ProjectHandler.getProject(periodInProgress.ProjectId);
+	    	_view.setState(PunchClockState.Start);
+		}			
+	}
+	
 	public void setNewProject(Project newProject) {
 		
 		Project project = ProjectHandler.createProject(newProject);
 		_currentProject = project;
-		StatusText.set("Created new project " + project.Description);
+		StatusText.set("Created new project " + project.Name);
 	}
 
 	public void startOrStopCurrentProject() {
@@ -50,14 +64,13 @@ public class PunchClockViewModel extends ViewModelBase<PunchClockActivity, Punch
 		{
 			PunchHandler.stopPeriod(periodInProgress);
 			StatusText.set("Stopped period " + periodInProgress.Id);
-			_view.setState(PunchClockState.Stop);
 		}
 		else
 		{
-			_view.setState(PunchClockState.Start);
 			PunchHandler.startProject(_currentProject);
 			StatusText.set("Working at job " + _currentProject.Description);
 		}
+		updateState();
 	}
 		
 	public void breakCurrentJob() {
