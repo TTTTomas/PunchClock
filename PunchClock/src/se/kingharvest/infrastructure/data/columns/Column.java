@@ -41,7 +41,7 @@ public class Column {
 	
 	public String toString()
 	{
-		String indexStr = IsPrimaryIdColumn ? SQLiteHelper.getIndexString(Name, Ordinal) : "";
+		String indexStr = IsPrimaryIdColumn ? SQLiteHelper.getIndexString(Name, true, Ordinal) : "";
 		String str = Name + " " + SQLiteHelper.toSqliteType(Type) + (TextUtils.isEmpty(indexStr) ? "" : " " + indexStr);
 		return str;
 	}

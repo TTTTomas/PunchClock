@@ -33,14 +33,19 @@ public class Strings {
 
 	public static String[] removeOne(String toRemove, String[] strings) {
 
-		String[] removed = new String[strings.length];
+		String[] removed = new String[strings.length-1];
 		int offset=0;
 		for (int j = 0; j < removed.length; j++) {
 			if(strings[j+offset].equals(toRemove))
 			{
 				offset = 1;
 			}
-			removed[j] = strings[j+offset];
+			
+			// Copy the next item unless we are at the end of the array.
+//			if(j+offset < removed.length)
+//			{
+			removed[j] = strings[j+offset];				
+//			}
 		}
 		return removed;
 	}

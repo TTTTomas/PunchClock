@@ -22,6 +22,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
+import android.text.TextUtils;
+
 
 /**
  * ISO 8601 date parsing utility.  Designed for parsing the ISO subset used in
@@ -79,6 +81,9 @@ public class ISO8601Date {
     //      TZD  = time zone designator (Z or +hh:mm or -hh:mm)
     public static Date parse( String input ) {
 
+    	if(TextUtils.isEmpty(input))
+    		return null;
+    	
         //NOTE: SimpleDateFormat uses GMT[-+]hh:mm for the TZ which breaks
         //things a bit.  Before we go on we have to repair this.
         SimpleDateFormat df = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ssz" );
@@ -105,6 +110,9 @@ public class ISO8601Date {
 
     public static String toString( Date date ) {
         
+    	if(date == null)
+    		return "";
+    		
         SimpleDateFormat df = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ssz" );
         
         TimeZone tz = TimeZone.getTimeZone( "UTC" );

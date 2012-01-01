@@ -5,6 +5,9 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.Date;
 
+import se.kingharvest.infrastructure.data.types.Id;
+import se.kingharvest.infrastructure.data.types.PrimaryId;
+
 /**
  * Various reflection based utility methods.
  * 
@@ -44,10 +47,8 @@ public class Reflect {
 		Method method = null;
 		try {
 			method = object.getClass().getMethod(methodName, argClass);
-		} catch (SecurityException e) {
-			throw new ReflectException(e.getMessage(), e);
-		} catch (NoSuchMethodException e) {
-			throw new ReflectException(e.getMessage(), e);
+		} catch (Exception e) {
+			throw new ReflectException("Failed to get method " + methodName + " with argument " + argClass.getSimpleName() + " from object of type " + getClassSimpleName(object), e);
 		}
 		return method;
 	}
@@ -83,7 +84,7 @@ public class Reflect {
 		try {
 			return method.invoke(object, arg);
 		} catch (Exception e) {
-			throw new ReflectException("Failed to call method " + method.getName() + " of object of type " + object.getClass().getSimpleName(), e);
+			throw new ReflectException("Failed to call method " + method.getName() + " of object of type " + getClassSimpleName(object), e);
 		}
 	}
 
@@ -99,7 +100,7 @@ public class Reflect {
 		try {
 			return method.invoke(object, args);
 		} catch (Exception e) {
-			throw new ReflectException("Failed to call method " + method.getName() + " of object of type " + object.getClass().getSimpleName(), e);
+			throw new ReflectException("Failed to call method " + method.getName() + " of object of type " + getClassSimpleName(object), e);
 		}
 	}
 
@@ -123,7 +124,7 @@ public class Reflect {
 		try {
 			instance = constructor.newInstance(arg);
 		} catch (Exception e) {
-			throw new ReflectException(e.getMessage(), e);
+			throw new ReflectException("Failed to create new instance from constructor of type " + constructor.getDeclaringClass() + " using argument of type " + getClassSimpleName(arg), e);
 		}
 		return instance;
 	}
@@ -143,7 +144,7 @@ public class Reflect {
 		try {
 			object.getClass().getField(fieldName).setBoolean(object, value);
 		} catch (Exception e) {
-			throw new ReflectException(e.getMessage(), e);
+			throw new ReflectException(fieldName, object, value, e);
 		}
 	}
 
@@ -152,7 +153,7 @@ public class Reflect {
 		try {
 			object.getClass().getField(fieldName).setInt(object, value);
 		} catch (Exception e) {
-			throw new ReflectException(e.getMessage(), e);
+			throw new ReflectException(fieldName, object, value, e);
 		}
 	}
 	
@@ -161,7 +162,7 @@ public class Reflect {
 		try {
 			object.getClass().getField(fieldName).setLong(object, value);
 		} catch (Exception e) {
-			throw new ReflectException(e.getMessage(), e);
+			throw new ReflectException(fieldName, object, value, e);
 		}
 	}
 
@@ -170,7 +171,7 @@ public class Reflect {
 		try {
 			object.getClass().getField(fieldName).setShort(object, value);
 		} catch (Exception e) {
-			throw new ReflectException(e.getMessage(), e);
+			throw new ReflectException(fieldName, object, value, e);
 		}
 	}
 
@@ -179,7 +180,7 @@ public class Reflect {
 		try {
 			object.getClass().getField(fieldName).setFloat(object, value);
 		} catch (Exception e) {
-			throw new ReflectException(e.getMessage(), e);
+			throw new ReflectException(fieldName, object, value, e);
 		}
 	}
 
@@ -188,7 +189,7 @@ public class Reflect {
 		try {
 			object.getClass().getField(fieldName).setDouble(object, value);
 		} catch (Exception e) {
-			throw new ReflectException(e.getMessage(), e);
+			throw new ReflectException(fieldName, object, value, e);
 		}
 	}
 
@@ -197,7 +198,7 @@ public class Reflect {
 		try {
 			object.getClass().getField(fieldName).setByte(object, value);
 		} catch (Exception e) {
-			throw new ReflectException(e.getMessage(), e);
+			throw new ReflectException(fieldName, object, value, e);
 		}
 	}
 
@@ -206,7 +207,7 @@ public class Reflect {
 		try {
 			object.getClass().getField(fieldName).setChar(object, value);
 		} catch (Exception e) {
-			throw new ReflectException(e.getMessage(), e);
+			throw new ReflectException(fieldName, object, value, e);
 		}
 	}
 
@@ -215,7 +216,32 @@ public class Reflect {
 		try {
 			object.getClass().getField(fieldName).set(object, ISO8601Date.parse(value));
 		} catch (Exception e) {
-			throw new ReflectException(e.getMessage(), e);
+			throw new ReflectException(fieldName, object, value, e);
+		}
+	}
+
+	public static void setId(String fieldName, Object object, long value)
+	{
+		try {
+			Class<?> fieldType = object.getClass().getField(fieldName).getType();
+			Object fieldValue = object.getClass().getField(fieldName).get(object);
+			if(fieldValue == null)
+			{
+				if(Types.isId(fieldType))
+					set(fieldName, object, new Id(value));
+				else if(Types.isPrimaryId(fieldType))
+					set(fieldName, object, new PrimaryId(value));
+				else
+					throw new ReflectException(fieldName, object, value);
+			}
+			else
+			{
+				((Id)fieldValue).set(value);
+			}
+		} catch (ReflectException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new ReflectException(fieldName, object, value, e);
 		}
 	}
 
@@ -224,7 +250,7 @@ public class Reflect {
 		try {
 			object.getClass().getField(fieldName).set(object, value);
 		} catch (Exception e) {
-			throw new ReflectException(e.getMessage(), e);
+			throw new ReflectException(fieldName, object, value, e);
 		}
 	}
 
@@ -233,7 +259,7 @@ public class Reflect {
 		try {
 			object.getClass().getField(fieldName).set(object, value.clone());
 		} catch (Exception e) {
-			throw new ReflectException(e.getMessage(), e);
+			throw new ReflectException(fieldName, object, value, e);
 		}
 	}
 
@@ -241,7 +267,7 @@ public class Reflect {
 		try {
 			return object.getClass().getField(fieldName).getLong(object);
 		} catch (Exception e) {
-			throw new ReflectException(e.getMessage(), e);
+			throw new ReflectException(fieldName, object, e);
 		}		
 	}
 	
@@ -249,7 +275,7 @@ public class Reflect {
 		try {
 			return object.getClass().getField(fieldName).getInt(object);
 		} catch (Exception e) {
-			throw new ReflectException(e.getMessage(), e);
+			throw new ReflectException(fieldName, object, e);
 		}		
 	}
 
@@ -257,7 +283,7 @@ public class Reflect {
 		try {
 			return object.getClass().getField(fieldName).getShort(object);
 		} catch (Exception e) {
-			throw new ReflectException(e.getMessage(), e);
+			throw new ReflectException(fieldName, object, e);
 		}		
 	}
 
@@ -265,7 +291,7 @@ public class Reflect {
 		try {
 			return object.getClass().getField(fieldName).getByte(object);
 		} catch (Exception e) {
-			throw new ReflectException(e.getMessage(), e);
+			throw new ReflectException(fieldName, object, e);
 		}		
 	}
 
@@ -273,7 +299,7 @@ public class Reflect {
 		try {
 			return object.getClass().getField(fieldName).getChar(object);
 		} catch (Exception e) {
-			throw new ReflectException(e.getMessage(), e);
+			throw new ReflectException(fieldName, object, e);
 		}		
 	}
 
@@ -281,7 +307,7 @@ public class Reflect {
 		try {
 			return object.getClass().getField(fieldName).getBoolean(object);
 		} catch (Exception e) {
-			throw new ReflectException(e.getMessage(), e);
+			throw new ReflectException(fieldName, object, e);
 		}		
 	}
 
@@ -289,7 +315,7 @@ public class Reflect {
 		try {
 			return object.getClass().getField(fieldName).getDouble(object);
 		} catch (Exception e) {
-			throw new ReflectException(e.getMessage(), e);
+			throw new ReflectException(fieldName, object, e);
 		}		
 	}
 	
@@ -297,7 +323,7 @@ public class Reflect {
 		try {
 			return object.getClass().getField(fieldName).getFloat(object);
 		} catch (Exception e) {
-			throw new ReflectException(e.getMessage(), e);
+			throw new ReflectException(fieldName, object, e);
 		}		
 	}
 
@@ -305,15 +331,15 @@ public class Reflect {
 		try {
 			return (String) object.getClass().getField(fieldName).get(object);
 		} catch (Exception e) {
-			throw new ReflectException(e.getMessage(), e);
+			throw new ReflectException(fieldName, object, e);
 		}		
 	}
 
 	public static String getDateString(String fieldName, Object object){
 		try {
-			return ISO8601Date.toString((Date) object.getClass().getField(fieldName).get(object));
+			return ISO8601Date.toString((Date)object.getClass().getField(fieldName).get(object));
 		} catch (Exception e) {
-			throw new ReflectException(e.getMessage(), e);
+			throw new ReflectException(fieldName, object, e);
 		}		
 	}
 
@@ -321,7 +347,19 @@ public class Reflect {
 		try {
 			return (byte[]) object.getClass().getField(fieldName).get(object);
 		} catch (Exception e) {
-			throw new ReflectException(e.getMessage(), e);
+			throw new ReflectException(fieldName, object, e);
+		}		
+	}
+
+	public static long getId(String fieldName, Object object){
+		try {
+			Object fieldValue = object.getClass().getField(fieldName).get(object);
+			if(fieldValue == null)
+				return 0;
+			else				
+				return ((Id)fieldValue).get();
+		} catch (Exception e) {
+			throw new ReflectException(fieldName, object, e);
 		}		
 	}
 
@@ -329,8 +367,14 @@ public class Reflect {
 		try {
 			return object.getClass().getField(fieldName).get(object);
 		} catch (Exception e) {
-			throw new ReflectException(e.getMessage(), e);
+			throw new ReflectException(fieldName, object, e);
 		}		
+	}
+
+	public static String getClassSimpleName(Object object) {
+		if(object == null)
+			return "Null";
+		return object.getClass().getSimpleName();
 	}
 
 	//	public static boolean matches(Method m, String ... params) {

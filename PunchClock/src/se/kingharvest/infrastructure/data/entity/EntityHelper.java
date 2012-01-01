@@ -1,8 +1,8 @@
 package se.kingharvest.infrastructure.data.entity;
 
+import se.kingharvest.infrastructure.data.DatabaseException;
 import se.kingharvest.infrastructure.data.columns.Column;
 import se.kingharvest.infrastructure.data.columns.ColumnCollection;
-import se.kingharvest.infrastructure.data.types.Id;
 import se.kingharvest.infrastructure.entity.IEntity;
 import se.kingharvest.infrastructure.system.Reflect;
 import se.kingharvest.infrastructure.system.Types;
@@ -22,7 +22,8 @@ public class EntityHelper {
 		Column[] columns = columnCollection.Columns;
 		for (int i = 0; i < columns.length; i++) {
 			Column column = columns[i];
-			bindValueToStatement(entity, statement, column);
+			if(!column.IsPrimaryIdColumn)
+				bindValueToStatement(entity, statement, column);
 		}
 	}
 
@@ -34,30 +35,54 @@ public class EntityHelper {
 	 */
 	public static <E extends IEntity> void bindValueToStatement(E entity, SQLiteStatement statement, Column column)
 	{
-		Class<?> type = column.Type;
-		int index = column.Ordinal+1;
-		if(Types.isInteger(type) || type.equals(Id.class))
-			statement.bindLong(index, Reflect.getInt(column.Name, entity));
-		else if(Types.isLong(type))
-			statement.bindLong(index, Reflect.getLong(column.Name, entity));
-		else if(Types.isShort(type))
-			statement.bindLong(index, Reflect.getShort(column.Name, entity));
-		else if(Types.isByte(type))
-			statement.bindLong(index, Reflect.getByte(column.Name, entity));
-		else if(Types.isBoolean(type)) 
-			statement.bindLong(index, Reflect.getBoolean(column.Name, entity) ? 1 : 0);
-		else if(Types.isString(type)) 
-			statement.bindString(index, Reflect.getString(column.Name, entity));
-		else if(Types.isChar(type)) 
-			statement.bindString(index, String.valueOf(Reflect.getChar(column.Name, entity)));
-		else if(Types.isDate(type)) 
-			statement.bindString(index, Reflect.getDateString(column.Name, entity));
-		else if(Types.isDouble(type)) 
-			statement.bindDouble(index, Reflect.getDouble(column.Name, entity));
-		else if(Types.isFloat(type)) 
-			statement.bindDouble(index, Reflect.getFloat(column.Name, entity));
-		else if(Types.isByteArray(type))
-			statement.bindBlob(index, Reflect.getByteArray(column.Name, entity));
+		try
+		{
+			Class<?> type = column.Type;
+			int index = column.Ordinal+1;
+			if(Types.isInteger(type))
+				statement.bindLong(index, Reflect.getInt(column.Name, entity));
+			if(Types.isId(type) || Types.isPrimaryId(type))
+				statement.bindLong(index, Reflect.getId(column.Name, entity));
+			else if(Types.isLong(type))
+				statement.bindLong(index, Reflect.getLong(column.Name, entity));
+			else if(Types.isShort(type))
+				statement.bindLong(index, Reflect.getShort(column.Name, entity));
+			else if(Types.isByte(type))
+				statement.bindLong(index, Reflect.getByte(column.Name, entity));
+			else if(Types.isBoolean(type)) 
+				statement.bindLong(index, Reflect.getBoolean(column.Name, entity) ? 1 : 0);
+			else if(Types.isString(type)){
+				String value = Reflect.getString(column.Name, entity);
+				if (value == null)
+					statement.bindNull(index);
+				else
+					statement.bindString(index, value);		
+			}
+			else if(Types.isChar(type)) 
+				statement.bindString(index, String.valueOf(Reflect.getChar(column.Name, entity)));
+			else if(Types.isDate(type)){
+				String value = Reflect.getDateString(column.Name, entity);
+				if (value == null)
+					statement.bindNull(index);
+				else
+					statement.bindString(index, value);		
+			}
+			else if(Types.isDouble(type)) 
+				statement.bindDouble(index, Reflect.getDouble(column.Name, entity));
+			else if(Types.isFloat(type)) 
+				statement.bindDouble(index, Reflect.getFloat(column.Name, entity));
+			else if(Types.isByteArray(type)){
+				byte[] value = Reflect.getByteArray(column.Name, entity);
+				if (value == null)
+					statement.bindNull(index);
+				else
+					statement.bindBlob(index, value);		
+			}
+		}
+		catch (Exception e)
+		{
+			throw new DatabaseException("Failed to bind entity type " + entity.getClass().getSimpleName() + " column " + column.toString() + " to Sqlite statement.", e);
+		}
 	}
 
 	/**
@@ -71,17 +96,21 @@ public class EntityHelper {
 	 */
 	public static <E extends IEntity> E createEntityFromCursor(Cursor cursor, ColumnCollection<E> columns, Class<E> entityType)
 	{
-		E entity = Reflect.newInstance(entityType);
-	
-		// Iterates the cursor instead of columns. This makes it possible to create entities 
-		// from "incomplete" queries.
-		int count = cursor.getColumnCount();
-		for (int i = 0; i < count; i++) {
-			String columnName = cursor.getColumnName(i);
-			Column column = columns.ColumnByName.get(columnName);
-			EntityHelper.setValueFromCursor(cursor, entity, i, column);
+		if(cursor != null && cursor.moveToFirst())
+		{
+			E entity = Reflect.newInstance(entityType);
+		
+			// Iterates the cursor instead of columns. This makes it possible to create entities 
+			// from "incomplete" queries.
+			int count = cursor.getColumnCount();
+			for (int i = 0; i < count; i++) {
+				String columnName = cursor.getColumnName(i);
+				Column column = columns.ColumnByName.get(columnName);
+				EntityHelper.setValueFromCursor(cursor, entity, i, column);
+			}
+			return entity;
 		}
-		return entity;
+		return null;
 	}
 
 	/**
@@ -94,8 +123,10 @@ public class EntityHelper {
 	public static <E extends IEntity> void setValueFromCursor(Cursor cursor, E entity, int cursorIndex, Column column)
 	{
 		Class<?> type = column.Type;
-		if(Types.isInteger(type) || type.getClass().equals(Id.class))
+		if(Types.isInteger(type))
 			Reflect.setInteger(column.Name, entity, cursor.getInt(cursorIndex));
+		else if(Types.isId(type) || Types.isPrimaryId(type))
+			Reflect.setId(column.Name, entity, cursor.getLong(cursorIndex));
 		else if(Types.isLong(type))
 			Reflect.setLong(column.Name, entity, cursor.getLong(cursorIndex));
 		else if(Types.isShort(type))

@@ -39,6 +39,7 @@ public class NewProjectDialog extends DialogBase
 			Project newProject = new Project(projectName);
 			_listener.newProjectOk(newProject);
 		}
+		dismiss();
 	}
 
 	@OnClick(R.id.NewProject_CancelButton)

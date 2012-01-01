@@ -14,7 +14,7 @@ public class ColumnCollection<E extends IEntity> {
 	final String[] _columnNames;
 	final String[] _columnsAsStrings;
 	String _columnAsString;
-	String _columnNamesAsString;
+	String _columnNamesWithoutIdColumnAsString;
 	
 	public ColumnCollection(Column ... columns)
 	{
@@ -71,11 +71,14 @@ public class ColumnCollection<E extends IEntity> {
 		return _columnNames;
 	}
 
-	public String getColumnNamesAsString()
+	public String getColumnNamesWithoutIdColumnAsString()
 	{
-		if (_columnNamesAsString == null)
-			_columnNamesAsString = Strings.join(_columnNames, ", ");
-		return _columnNamesAsString;
+		if (_columnNamesWithoutIdColumnAsString == null)
+		{
+			String[] columnsWithoutIdColumn = Strings.removeOne(PrimaryIdColumn.Name, _columnNames);			
+			_columnNamesWithoutIdColumnAsString = Strings.join(columnsWithoutIdColumn, ", ");
+		}
+		return _columnNamesWithoutIdColumnAsString;
 	}
 
 	public String getSortedColumnsAsString() {

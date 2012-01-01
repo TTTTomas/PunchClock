@@ -14,6 +14,7 @@ public class SQLiteHelper {
 	
 	public static <E extends IEntity> void createTable(SQLiteDatabase database, String tableName, ColumnCollection<E> columns)
 	{
+		//String idColumnSql = getIndexString("IdColumn", 0);
 		String sql = "CREATE TABLE " + tableName + " (" + columns.getColumnsAsString() + ")";
 		database.execSQL(sql);
 	}
@@ -54,8 +55,9 @@ public class SQLiteHelper {
 		throw new IllegalArgumentException("Type " + type + " is not a valid Sqlite type.");
 	}
 
-	public static String getIndexString(String indexName, int indexOrdinal) {
-		String indexString = "CONSTRAINT PK_" + indexName.toUpperCase() + "_" + indexOrdinal + " PRIMARY KEY AUTOINCREMENT";
+	public static String getIndexString(String indexName, boolean isPrimaryKey, int indexOrdinal) {
+		String primaryKey = isPrimaryKey ? " PRIMARY KEY" : "";
+		String indexString = "CONSTRAINT PK_" + indexName.toUpperCase() + "_" + indexOrdinal + primaryKey + " AUTOINCREMENT";
 		return indexString;
 	}
 
@@ -73,12 +75,12 @@ public class SQLiteHelper {
 	{
 		String[] columnsWithoutIdColumn = Strings.removeOne(columns.PrimaryIdColumn.Name, columns.getColumnNames());
 		
-		String parameters = Strings.join(columnsWithoutIdColumn, "=?, ");
+		String parameters = Strings.join(columnsWithoutIdColumn, "=?, ") + "=?";
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("UPDATE ").append(tableName)
 			.append(" SET ").append(parameters)
-			.append(" WHERE ").append(columns.PrimaryIdColumn).append("=?");
+			.append(" WHERE ").append(columns.PrimaryIdColumn.Name).append("=?");
 		
 		String sql = sb.toString();
 
@@ -88,11 +90,11 @@ public class SQLiteHelper {
 
 	public static <E extends IEntity> SQLiteStatement createInsertStatement(SQLiteDatabase database, ColumnCollection<E> columns, String tableName)
 	{
-		String parameters = Strings.join("?", columns.count(), ", ");
+		String parameters = Strings.join("?", columns.count()-1, ", ");
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("INSERT INTO ").append(tableName)
-			.append(" (").append(columns.getColumnNamesAsString()).append(")")
+			.append(" (").append(columns.getColumnNamesWithoutIdColumnAsString()).append(")")
 			.append(" VALUES (").append(parameters).append(")");
 		
 		String sql = sb.toString();
