@@ -54,12 +54,12 @@ public class PunchClockActivity extends ActivityBase<PunchClockActivity, PunchCl
 		switch (state) {
 		case Start:
 			getButton(R.id.Punchclock_StartButton).setText("Stop");
-			getButton(R.id.Punchclock_BreakButton).setEnabled(false);
+			getButton(R.id.Punchclock_BreakButton).setEnabled(true);
 			break;
 
 		case Stop:
 			getButton(R.id.Punchclock_StartButton).setText("Start");
-			getButton(R.id.Punchclock_BreakButton).setEnabled(true);
+			getButton(R.id.Punchclock_BreakButton).setEnabled(false);
 			break;
 
 		}

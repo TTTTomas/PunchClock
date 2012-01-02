@@ -97,7 +97,7 @@ public class Table<E extends EntityBase> implements ITable<E>{
 			}
 		}
 
-		EntityHelper.bindEntityToStatement(entity, _updateStatement, _columns);
+		EntityHelper.bindEntityToUpdateStatement(entity, _updateStatement, _columns);
 		_updateStatement.execute();
 	}
 

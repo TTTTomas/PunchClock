@@ -13,6 +13,7 @@ public class EntityHelper {
 
 	/**
 	 * Puts all field values of an entity into a statement as specified by a column collection.
+	 * The primary key is skipped, therefore not bound.
 	 * @param entity
 	 * @param statement
 	 * @param columnCollection
@@ -25,6 +26,22 @@ public class EntityHelper {
 			if(!column.IsPrimaryIdColumn)
 				bindValueToStatement(entity, statement, column);
 		}
+	}
+
+	/**
+	 * Binds an entity to an update statement. Similar to binding to an insert statement, except that the primary id is also bound, last.
+	 * @param entity
+	 * @param statement
+	 * @param columnCollection
+	 */
+	public static <E extends IEntity> void bindEntityToUpdateStatement(E entity, SQLiteStatement statement, ColumnCollection<E> columnCollection)
+	{
+		// Bind entity.
+		bindEntityToStatement(entity, statement, columnCollection);
+		
+		// Bind primary key.
+		Column primaryKey = columnCollection.PrimaryIdColumn;
+		bindValueToStatement(entity, statement, primaryKey);
 	}
 
 	/**
