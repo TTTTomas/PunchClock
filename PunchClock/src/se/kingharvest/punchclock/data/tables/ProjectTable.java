@@ -1,4 +1,4 @@
-package se.kingharvest.punchclock.data;
+package se.kingharvest.punchclock.data.tables;
 
 import se.kingharvest.infrastructure.data.Database;
 import se.kingharvest.infrastructure.data.Table;

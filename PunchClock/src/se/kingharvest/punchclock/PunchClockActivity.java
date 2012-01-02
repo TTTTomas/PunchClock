@@ -77,6 +77,7 @@ public class PunchClockActivity extends ActivityBase<PunchClockActivity, PunchCl
 		return new OnNewProjectOkListener() {
 			public void newProjectOk(Project newProject) {
 				_viewModel.setNewProject(newProject);
+				_viewModel.startOrStopCurrentProject();
 			}
 		};
 	}

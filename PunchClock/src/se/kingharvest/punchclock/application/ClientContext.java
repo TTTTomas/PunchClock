@@ -1,5 +1,6 @@
 package se.kingharvest.punchclock.application;
 
+import se.kingharvest.punchclock.data.PunchClockDatabase;
 import android.app.Application;
 
 public class ClientContext extends Application{

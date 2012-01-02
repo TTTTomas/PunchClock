@@ -1,8 +1,8 @@
-package se.kingharvest.punchclock.application;
+package se.kingharvest.punchclock.data;
 
 import se.kingharvest.infrastructure.data.Database;
-import se.kingharvest.punchclock.data.ProjectTable;
-import se.kingharvest.punchclock.data.WorkPeriodTable;
+import se.kingharvest.punchclock.data.tables.ProjectTable;
+import se.kingharvest.punchclock.data.tables.WorkPeriodTable;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 

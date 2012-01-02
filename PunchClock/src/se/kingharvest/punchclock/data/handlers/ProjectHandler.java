@@ -1,7 +1,7 @@
-package se.kingharvest.punchclock.model;
+package se.kingharvest.punchclock.data.handlers;
 
 import se.kingharvest.infrastructure.data.types.Id;
-import se.kingharvest.punchclock.data.ProjectTable;
+import se.kingharvest.punchclock.data.tables.ProjectTable;
 import se.kingharvest.punchclock.entity.Project;
 
 public class ProjectHandler {

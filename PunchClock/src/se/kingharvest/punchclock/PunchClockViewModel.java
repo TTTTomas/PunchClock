@@ -4,10 +4,10 @@ import se.kingharvest.infrastructure.android.ParcelableCreator;
 import se.kingharvest.infrastructure.model.ViewModelBase;
 import se.kingharvest.infrastructure.property.StringProperty;
 import se.kingharvest.infrastructure.time.TimeSpan;
+import se.kingharvest.punchclock.data.handlers.ProjectHandler;
+import se.kingharvest.punchclock.data.handlers.PunchHandler;
 import se.kingharvest.punchclock.entity.Project;
 import se.kingharvest.punchclock.entity.WorkPeriod;
-import se.kingharvest.punchclock.model.ProjectHandler;
-import se.kingharvest.punchclock.model.PunchHandler;
 import android.os.Parcelable;
 
 public class PunchClockViewModel extends ViewModelBase<PunchClockActivity, PunchClockViewModel>

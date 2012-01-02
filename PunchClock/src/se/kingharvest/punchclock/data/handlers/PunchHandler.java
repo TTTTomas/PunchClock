@@ -1,11 +1,11 @@
-package se.kingharvest.punchclock.model;
+package se.kingharvest.punchclock.data.handlers;
 
 import java.util.Date;
 
 import se.kingharvest.infrastructure.data.types.Id;
 import se.kingharvest.infrastructure.time.DateTime;
-import se.kingharvest.punchclock.data.ProjectTable;
-import se.kingharvest.punchclock.data.WorkPeriodTable;
+import se.kingharvest.punchclock.data.tables.ProjectTable;
+import se.kingharvest.punchclock.data.tables.WorkPeriodTable;
 import se.kingharvest.punchclock.entity.Project;
 import se.kingharvest.punchclock.entity.WorkPeriod;
 
