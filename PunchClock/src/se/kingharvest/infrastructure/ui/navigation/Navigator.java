@@ -2,7 +2,7 @@ package se.kingharvest.infrastructure.ui.navigation;
 
 import java.lang.reflect.Method;
 
-import se.kingharvest.infrastructure.system.Reflect;
+import se.kingharvest.infrastructure.reflection.MethodReflect;
 import se.kingharvest.infrastructure.ui.annotation.NavigateToAnnotation;
 import se.kingharvest.infrastructure.ui.util.IntentUtils;
 import android.app.Activity;
@@ -24,12 +24,12 @@ public class Navigator {
 			int nrOfArguments = intent.getIntExtra(SE_KINGHARVEST_NAVIGATOR_NR_OF_ARGUMENTS, -1);
 			
 			
-			Method m = NavigateToAnnotation.getAnnotatedMethod(activity, targetMethod);
+			Method m = NavigateToAnnotation.getInstance().getAnnotatedMethod(activity, targetMethod);
 			Object[] args = new Object[nrOfArguments];
 			for (int i = 0; i < args.length; i++) {
 				args[i] = IntentUtils.getArgumentFromIntent(intent, i);
 			}
-			Reflect.call(activity, m, args);
+			MethodReflect.call(activity, m, args);
 		}
 	}
 	

@@ -1,4 +1,4 @@
-package se.kingharvest.infrastructure.ui;
+package se.kingharvest.infrastructure.ui.dialog;
 
 import android.app.Dialog;
 

@@ -1,12 +1,13 @@
 package se.kingharvest.infrastructure.ui.ex;
 
-import se.kingharvest.infrastructure.property.IPropertyListener;
 import se.kingharvest.infrastructure.property.StringProperty;
 import se.kingharvest.infrastructure.system.MethodDelegate;
-import se.kingharvest.infrastructure.ui.binder.LayoutBinder;
+import se.kingharvest.infrastructure.ui.binding.LayoutBinder;
+import se.kingharvest.infrastructure.ui.ex.property.PropertyTextListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 
 /**
  * Provides a builder interface to the Button.
@@ -29,22 +30,19 @@ public class ButtonEx extends ViewExBase<Button, ButtonEx> {
 
 	public ButtonEx setText(int textId)
 	{
-		_view.setText(textId);
+		TextView view = _view.get();
+		if(view != null)
+			view.setText(textId);
 		return this;
 	}
 
 	public ButtonEx setText(String text)
 	{
-		_view.setText(text);
+		TextView view = _view.get();
+		if(view != null)
+			view.setText(text);
 		return this;
-	}
-	
-	public ButtonEx setEnabled(boolean enabled)
-	{
-		_view.setEnabled(enabled);
-		return this;
-	}
-	
+	}	
 	
 	/**
 	 * Sets the click event.
@@ -53,7 +51,9 @@ public class ButtonEx extends ViewExBase<Button, ButtonEx> {
 	 */
 	public ButtonEx setOnClick(OnClickListener listener)
 	{
-		_view.setOnClickListener(listener);
+		Button view = _view.get();
+		if(view != null)
+			view.setOnClickListener(listener);
 		return this;
 	}
 
@@ -66,11 +66,13 @@ public class ButtonEx extends ViewExBase<Button, ButtonEx> {
 	{
 		final MethodDelegate<Void, View> clickMethod = new MethodDelegate<Void, View>(_context, methodName, View.class);
 
-		_view.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				clickMethod.call(v);
-			}
-		});
+		Button view = _view.get();
+		if(view != null)
+			view.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					clickMethod.call(v);
+				}
+			});
 		return this;
 	}
 
@@ -80,20 +82,17 @@ public class ButtonEx extends ViewExBase<Button, ButtonEx> {
 //	}
 
 	public ButtonEx bindOnClick(Object obj) {
-		setOnClick(LayoutBinder.getOnClick(obj, _view.getId()));
+		Button view = _view.get();
+		if(view != null)
+			setOnClick(LayoutBinder.getOnClick(obj, view.getId()));
 		return this;
 	}
 
 	public ButtonEx bindText(StringProperty textProperty)
 	{
-		final Button realView = _view;
-		textProperty.Listeners.add(new IPropertyListener<String>() {
-
-			public void propertyChanged(String value) {
-				realView.setText(value);
-			}
-		});
-		_view.setText(textProperty.get());
+		Button view = _view.get();
+		if(view != null)
+			new PropertyTextListener<String>(view, textProperty);
 		return this;
 	}
 }

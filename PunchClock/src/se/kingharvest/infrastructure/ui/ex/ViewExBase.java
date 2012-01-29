@@ -1,5 +1,7 @@
 package se.kingharvest.infrastructure.ui.ex;
 
+import java.lang.ref.WeakReference;
+
 import android.content.Context;
 import android.view.View;
 
@@ -15,8 +17,8 @@ import android.view.View;
  */
 public class ViewExBase<V extends View, VEX extends ViewExBase<V, VEX>> {
 	
-	Context _context;
-	V _view;
+	WeakReference<Context> _context;
+	WeakReference<V> _view;
 
 	/**
 	 * Sets a context and a view to wrap.
@@ -26,13 +28,23 @@ public class ViewExBase<V extends View, VEX extends ViewExBase<V, VEX>> {
 	 */
 	@SuppressWarnings("unchecked")
 	public VEX set(Context context, V view) {
-		_context = context;
-		_view = view;
+		_context = new WeakReference<Context>(context);
+		_view = new WeakReference<V>(view);
 		return (VEX) this;
 	}
 
 	public V get()
 	{
-		return _view;
+		return _view.get();
+	}
+
+	
+	@SuppressWarnings("unchecked")
+	public VEX setEnabled(boolean enabled)
+	{
+		View view = _view.get();
+		if(view != null)
+			view.setEnabled(enabled);
+		return (VEX) this;
 	}
 }

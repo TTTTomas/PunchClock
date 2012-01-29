@@ -1,4 +1,4 @@
-package se.kingharvest.infrastructure.ui.binder;
+package se.kingharvest.infrastructure.ui.binding;
 
 import android.view.View;
 import se.kingharvest.infrastructure.ui.ex.ButtonEx;

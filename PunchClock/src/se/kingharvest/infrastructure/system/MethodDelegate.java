@@ -2,6 +2,8 @@ package se.kingharvest.infrastructure.system;
 
 import java.lang.reflect.Method;
 
+import se.kingharvest.infrastructure.reflection.MethodReflect;
+
 /**
  * Wraps a named method of a given Object, acting as a delegate.
  * @author tomasb
@@ -16,7 +18,7 @@ public class MethodDelegate<R, T1> extends Delegate<R, T1> {
 	
 	public MethodDelegate(Object object, String methodName, Class<?> argClass) {
 		_object = object;
-		_method = Reflect.getMethod(object, methodName, argClass);
+		_method = MethodReflect.getMethod(object, methodName, argClass);
 	}
 
 	/**
@@ -27,6 +29,6 @@ public class MethodDelegate<R, T1> extends Delegate<R, T1> {
 	@SuppressWarnings("unchecked")
 	public R call(T1 arg)
 	{
-		return (R) Reflect.call(_object, _method, arg);
+		return (R) MethodReflect.call(_object, _method, arg);
 	}
 }

@@ -1,11 +1,16 @@
 package se.kingharvest.punchclock;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import se.kingharvest.infrastructure.ui.ActivityBase;
 import se.kingharvest.infrastructure.ui.annotation.OnClick;
+import se.kingharvest.infrastructure.ui.annotation.OnCreateDialog;
 import se.kingharvest.punchclock.PunchClockViewModel.PunchClockState;
 import se.kingharvest.punchclock.dialogs.NewProjectDialog;
 import se.kingharvest.punchclock.dialogs.NewProjectDialog.OnNewProjectOkListener;
 import se.kingharvest.punchclock.entity.Project;
+import android.app.Dialog;
 import android.view.View;
 
 
@@ -23,7 +28,14 @@ public class PunchClockActivity extends ActivityBase<PunchClockActivity, PunchCl
 	}
 
 	public void bindView()
-    {		
+    {	
+		//PerformanceTester.testAnnotations(this);
+		//PerformanceTester.testMethodLookup(this);
+		//PerformanceTester.testSingleMethodLookup(this);
+		//PerformanceTester.testSingleMethodCall(this);
+		//PerformanceTester.testSingleMethodCallWithArgs(this);
+		//PerformanceTester.testSingleMethodCallCached(this);
+		
         getButton(R.id.Punchclock_StartButton)
     		.bindOnClick(this);
 
@@ -48,6 +60,23 @@ public class PunchClockActivity extends ActivityBase<PunchClockActivity, PunchCl
 	{
 		_viewModel.breakCurrentJob();
 	}
+	
+	public static int _counter = 0;
+	public void countUp()
+	{
+		Map<Integer, String> map = new HashMap<Integer, String>();
+		_counter++;
+		map.put(_counter, "Hello");
+		//Logger.write(LOG_TAG, "Counter: " + _counter);
+	}
+
+	public void countUp(int up, int down, String bla, String blo)
+	{
+		Map<Integer, String> map = new HashMap<Integer, String>();
+		_counter += up;
+		map.put(_counter, "Hello");
+		//Logger.write(LOG_TAG, "Counter: " + _counter);
+	}
 
 	public void setState(PunchClockState state) {
 		
@@ -68,7 +97,7 @@ public class PunchClockActivity extends ActivityBase<PunchClockActivity, PunchCl
 	
 	public void askForJob() {
 		
-		NewProjectDialog dialog = new NewProjectDialog(this);
+		NewProjectDialog dialog = createNewProjectDialog();
 		showDialog(dialog);
 	}
 
@@ -82,9 +111,21 @@ public class PunchClockActivity extends ActivityBase<PunchClockActivity, PunchCl
 		};
 	}
 	
+	@OnCreateDialog
+	public NewProjectDialog createNewProjectDialog()
+	{
+		NewProjectDialog dialog = new NewProjectDialog(this);
+		return dialog;
+	}
+	
 	public void prepareDialog(NewProjectDialog dialog)
 	{
 		dialog.setOnNewJobOkListener(onNewProjectOk());
+	}
+
+	public void manageDialog(Dialog dialog) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	

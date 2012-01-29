@@ -3,7 +3,7 @@ package se.kingharvest.infrastructure.data;
 import java.util.HashMap;
 
 import se.kingharvest.infrastructure.entity.IEntity;
-import se.kingharvest.infrastructure.system.Reflect;
+import se.kingharvest.infrastructure.reflection.Reflect;
 
 public class TableFactory implements ITableFactory{
 

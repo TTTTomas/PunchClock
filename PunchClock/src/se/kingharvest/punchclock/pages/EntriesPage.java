@@ -5,6 +5,7 @@ import se.kingharvest.infrastructure.ui.ActivityBase;
 import se.kingharvest.infrastructure.ui.annotation.NavigateTo;
 import se.kingharvest.infrastructure.ui.annotation.OnClick;
 import se.kingharvest.punchclock.R;
+import android.app.Dialog;
 import android.view.View;
 
 public class EntriesPage extends ActivityBase<EntriesPage, EntriesViewModel>{
@@ -44,6 +45,11 @@ public class EntriesPage extends ActivityBase<EntriesPage, EntriesViewModel>{
 	{
     	Logger.write(LOG_TAG, "startWithArguments: " + arg1 + ", arg2: " + arg2 + ", arg3: " + arg3);
     	i = (int) arg3;
+	}
+
+	public void manageDialog(Dialog dialog) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

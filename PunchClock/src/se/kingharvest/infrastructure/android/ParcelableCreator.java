@@ -4,7 +4,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 
 import se.kingharvest.infrastructure.diagnostics.Logger;
-import se.kingharvest.infrastructure.system.Reflect;
+import se.kingharvest.infrastructure.reflection.Reflect;
 import android.os.Parcel;
 import android.os.Parcelable;
 

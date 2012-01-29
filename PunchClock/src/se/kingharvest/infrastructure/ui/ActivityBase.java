@@ -2,16 +2,16 @@ package se.kingharvest.infrastructure.ui;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 
 import se.kingharvest.infrastructure.diagnostics.Logger;
 import se.kingharvest.infrastructure.model.IView;
 import se.kingharvest.infrastructure.model.IViewModel;
-import se.kingharvest.infrastructure.system.Reflect;
+import se.kingharvest.infrastructure.reflection.MethodReflect;
 import se.kingharvest.infrastructure.ui.annotation.OnActivityResultAnnotation;
-import se.kingharvest.infrastructure.ui.binder.ILayoutBinder;
-import se.kingharvest.infrastructure.ui.binder.LayoutBinder;
+import se.kingharvest.infrastructure.ui.binding.ILayoutBinder;
+import se.kingharvest.infrastructure.ui.binding.LayoutBinder;
+import se.kingharvest.infrastructure.ui.dialog.DialogManager;
+import se.kingharvest.infrastructure.ui.dialog.IDialogManager;
 import se.kingharvest.infrastructure.ui.ex.ButtonEx;
 import se.kingharvest.infrastructure.ui.ex.SpinnerEx;
 import se.kingharvest.infrastructure.ui.ex.TextViewEx;
@@ -19,7 +19,6 @@ import se.kingharvest.infrastructure.ui.ex.ViewEx;
 import se.kingharvest.infrastructure.ui.navigation.INavigator;
 import se.kingharvest.infrastructure.ui.navigation.Navigator;
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -43,10 +42,7 @@ public abstract class ActivityBase<V extends IView<?>, VM extends IViewModel>
 	
 	protected VM _viewModel;
 	
-	/** The set of dialogs this Activity manages. */
-	protected Set<Dialog> _dialogs;
-
-	/** Contains all methods annotated with OnActivityResult if the subclasser has not implemented onActivityResult. */
+    /** Contains all methods annotated with OnActivityResult if the subclasser has not implemented onActivityResult. */
 	protected HashMap<Integer, Method> _resultMethods;
 	
 	/**
@@ -123,19 +119,12 @@ public abstract class ActivityBase<V extends IView<?>, VM extends IViewModel>
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		// Finds all methods annotated with OnActivityResult.
-        if(_resultMethods == null)
+    	Method m = OnActivityResultAnnotation.getInstance().getAnnotatedMethod(this, requestCode);
+
+        if(m != null)
         {
-            Logger.write(LOG_TAG, "Reading all OnActivityResult annotations.");
-        	_resultMethods = OnActivityResultAnnotation.getAnnotatedMethods(this);
-        }
-        
-        // Dispatches the result to a method annotated with the correct requestCode.
-        if(_resultMethods != null && _resultMethods.containsKey(requestCode))
-        {
-        	Method m = _resultMethods.get(requestCode);
             Logger.write(LOG_TAG, "Getting activity results. Calling " + m.getName() + ". requestCode: " + requestCode + ", resultCode: " + resultCode);
-        	Reflect.call(this, m, resultCode, data);
+        	MethodReflect.call(this, m, resultCode, data);
         }
         else
         {
@@ -143,6 +132,8 @@ public abstract class ActivityBase<V extends IView<?>, VM extends IViewModel>
         }
 	}
 
+	
+	DialogManager _dialogManager = new DialogManager(this);
 	/**
 	 * onActivityResult is called when the activity is destroyed.
 	 * Here all dialogs managed by this activity are dismissed to
@@ -151,13 +142,8 @@ public abstract class ActivityBase<V extends IView<?>, VM extends IViewModel>
 	 */
 	@Override
 	protected void onDestroy() {
-		if(_dialogs != null)
-		{
-			for (Dialog dialog : _dialogs) {
-				dialog.dismiss();
-			}
-			_dialogs.clear();
-		}
+		
+		_dialogManager.onDestroy();
 		super.onDestroy();
 	}
 	
@@ -208,20 +194,7 @@ public abstract class ActivityBase<V extends IView<?>, VM extends IViewModel>
 
 
 	public <D extends DialogBase> void showDialog(D dialog) {
-		
-		Reflect.call(this, "prepareDialog", dialog);
-		dialog.show();
-	}
-
-	/**
-	 * Adds a dialog to be managed by this activity.
-	 * Managed dialogs will be dismissed when the activity gets destroyed.
-	 */
-	public void manageDialog(Dialog dialog) {
-		if(_dialogs == null)
-			_dialogs = new HashSet<Dialog>();
-		
-		_dialogs.add(dialog);
+		_dialogManager.showDialog(dialog);
 	}
 	
 	/* INavigator */

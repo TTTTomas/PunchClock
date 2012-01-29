@@ -7,7 +7,7 @@ import se.kingharvest.infrastructure.data.columns.ColumnHelper;
 import se.kingharvest.infrastructure.data.entity.EntityHelper;
 import se.kingharvest.infrastructure.data.sqlite.SQLiteHelper;
 import se.kingharvest.infrastructure.entity.EntityBase;
-import se.kingharvest.infrastructure.system.Reflect;
+import se.kingharvest.infrastructure.reflection.Reflect;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteStatement;
 

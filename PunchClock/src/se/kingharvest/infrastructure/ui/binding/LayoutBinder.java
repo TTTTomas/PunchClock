@@ -1,8 +1,8 @@
-package se.kingharvest.infrastructure.ui.binder;
+package se.kingharvest.infrastructure.ui.binding;
 
 import java.lang.reflect.Method;
 
-import se.kingharvest.infrastructure.system.Reflect;
+import se.kingharvest.infrastructure.reflection.MethodReflect;
 import se.kingharvest.infrastructure.ui.annotation.OnClickAnnotation;
 import se.kingharvest.infrastructure.ui.ex.ButtonEx;
 import se.kingharvest.infrastructure.ui.ex.SpinnerEx;
@@ -73,12 +73,12 @@ public class LayoutBinder {
 	 */
 	public static View.OnClickListener getOnClick(final Object object, int id)
 	{
-		final Method method = OnClickAnnotation.getAnnotatedMethod(object, id);
+		final Method method = OnClickAnnotation.getInstance().getAnnotatedMethod(object, id);
 
 		return new View.OnClickListener()
 		{					
 			public void onClick(View v) {
-				Reflect.call(object, method, v);
+				MethodReflect.call(object, method, v);
 			}
 		};
 	}

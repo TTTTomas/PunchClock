@@ -4,7 +4,8 @@ import se.kingharvest.infrastructure.data.DatabaseException;
 import se.kingharvest.infrastructure.data.columns.Column;
 import se.kingharvest.infrastructure.data.columns.ColumnCollection;
 import se.kingharvest.infrastructure.entity.IEntity;
-import se.kingharvest.infrastructure.system.Reflect;
+import se.kingharvest.infrastructure.reflection.FieldReflect;
+import se.kingharvest.infrastructure.reflection.Reflect;
 import se.kingharvest.infrastructure.system.Types;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteStatement;
@@ -57,39 +58,39 @@ public class EntityHelper {
 			Class<?> type = column.Type;
 			int index = column.Ordinal+1;
 			if(Types.isInteger(type))
-				statement.bindLong(index, Reflect.getInt(column.Name, entity));
+				statement.bindLong(index, FieldReflect.getInt(column.Name, entity));
 			if(Types.isId(type) || Types.isPrimaryId(type))
-				statement.bindLong(index, Reflect.getId(column.Name, entity));
+				statement.bindLong(index, FieldReflect.getId(column.Name, entity));
 			else if(Types.isLong(type))
-				statement.bindLong(index, Reflect.getLong(column.Name, entity));
+				statement.bindLong(index, FieldReflect.getLong(column.Name, entity));
 			else if(Types.isShort(type))
-				statement.bindLong(index, Reflect.getShort(column.Name, entity));
+				statement.bindLong(index, FieldReflect.getShort(column.Name, entity));
 			else if(Types.isByte(type))
-				statement.bindLong(index, Reflect.getByte(column.Name, entity));
+				statement.bindLong(index, FieldReflect.getByte(column.Name, entity));
 			else if(Types.isBoolean(type)) 
-				statement.bindLong(index, Reflect.getBoolean(column.Name, entity) ? 1 : 0);
+				statement.bindLong(index, FieldReflect.getBoolean(column.Name, entity) ? 1 : 0);
 			else if(Types.isString(type)){
-				String value = Reflect.getString(column.Name, entity);
+				String value = FieldReflect.getString(column.Name, entity);
 				if (value == null)
 					statement.bindNull(index);
 				else
 					statement.bindString(index, value);		
 			}
 			else if(Types.isChar(type)) 
-				statement.bindString(index, String.valueOf(Reflect.getChar(column.Name, entity)));
+				statement.bindString(index, String.valueOf(FieldReflect.getChar(column.Name, entity)));
 			else if(Types.isDate(type)){
-				String value = Reflect.getDateString(column.Name, entity);
+				String value = FieldReflect.getDateString(column.Name, entity);
 				if (value == null)
 					statement.bindNull(index);
 				else
 					statement.bindString(index, value);		
 			}
 			else if(Types.isDouble(type)) 
-				statement.bindDouble(index, Reflect.getDouble(column.Name, entity));
+				statement.bindDouble(index, FieldReflect.getDouble(column.Name, entity));
 			else if(Types.isFloat(type)) 
-				statement.bindDouble(index, Reflect.getFloat(column.Name, entity));
+				statement.bindDouble(index, FieldReflect.getFloat(column.Name, entity));
 			else if(Types.isByteArray(type)){
-				byte[] value = Reflect.getByteArray(column.Name, entity);
+				byte[] value = FieldReflect.getByteArray(column.Name, entity);
 				if (value == null)
 					statement.bindNull(index);
 				else
@@ -141,29 +142,29 @@ public class EntityHelper {
 	{
 		Class<?> type = column.Type;
 		if(Types.isInteger(type))
-			Reflect.setInteger(column.Name, entity, cursor.getInt(cursorIndex));
+			FieldReflect.setInt(column.Name, entity, cursor.getInt(cursorIndex));
 		else if(Types.isId(type) || Types.isPrimaryId(type))
-			Reflect.setId(column.Name, entity, cursor.getLong(cursorIndex));
+			FieldReflect.setId(column.Name, entity, cursor.getLong(cursorIndex));
 		else if(Types.isLong(type))
-			Reflect.setLong(column.Name, entity, cursor.getLong(cursorIndex));
+			FieldReflect.setLong(column.Name, entity, cursor.getLong(cursorIndex));
 		else if(Types.isShort(type))
-			Reflect.setShort(column.Name, entity, cursor.getShort(cursorIndex));
+			FieldReflect.setShort(column.Name, entity, cursor.getShort(cursorIndex));
 		else if(Types.isString(type))
-			Reflect.set(column.Name, entity, cursor.getString(cursorIndex));
+			FieldReflect.set(column.Name, entity, cursor.getString(cursorIndex));
 		else if(Types.isDouble(type))
-			Reflect.setDouble(column.Name, entity, cursor.getDouble(cursorIndex));
+			FieldReflect.setDouble(column.Name, entity, cursor.getDouble(cursorIndex));
 		else if(Types.isBoolean(type))
-			Reflect.setBoolean(column.Name, entity, cursor.getInt(cursorIndex) != 0);
+			FieldReflect.setBoolean(column.Name, entity, cursor.getInt(cursorIndex) != 0);
 		else if(Types.isFloat(type))
-			Reflect.setFloat(column.Name, entity, cursor.getFloat(cursorIndex));
+			FieldReflect.setFloat(column.Name, entity, cursor.getFloat(cursorIndex));
 		else if(Types.isDate(type))
-			Reflect.setDateString(column.Name, entity, cursor.getString(cursorIndex));
+			FieldReflect.setDateString(column.Name, entity, cursor.getString(cursorIndex));
 		else if(Types.isByte(type))
-			Reflect.setByte(column.Name, entity, (byte) cursor.getShort(cursorIndex));
+			FieldReflect.setByte(column.Name, entity, (byte) cursor.getShort(cursorIndex));
 		else if(Types.isByteArray(type))
-			Reflect.setByteArrayClone(column.Name, entity, cursor.getBlob(cursorIndex));
+			FieldReflect.setByteArrayClone(column.Name, entity, cursor.getBlob(cursorIndex));
 		else if(Types.isChar(type)) 
-			Reflect.setChar(column.Name, entity, cursor.getString(cursorIndex).charAt(0));
+			FieldReflect.setChar(column.Name, entity, cursor.getString(cursorIndex).charAt(0));
 		else
 			throw new IllegalArgumentException("Value type " + type + " is not a valid type for setting field values.");			
 	}

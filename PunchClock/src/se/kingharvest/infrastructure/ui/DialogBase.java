@@ -1,7 +1,7 @@
 package se.kingharvest.infrastructure.ui;
 
-import se.kingharvest.infrastructure.ui.binder.ILayoutBinder;
-import se.kingharvest.infrastructure.ui.binder.LayoutBinder;
+import se.kingharvest.infrastructure.ui.binding.ILayoutBinder;
+import se.kingharvest.infrastructure.ui.binding.LayoutBinder;
 import se.kingharvest.infrastructure.ui.ex.ButtonEx;
 import se.kingharvest.infrastructure.ui.ex.SpinnerEx;
 import se.kingharvest.infrastructure.ui.ex.TextViewEx;

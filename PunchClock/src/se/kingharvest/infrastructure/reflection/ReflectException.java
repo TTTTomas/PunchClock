@@ -1,4 +1,5 @@
-package se.kingharvest.infrastructure.system;
+package se.kingharvest.infrastructure.reflection;
+
 
 public class ReflectException extends IllegalArgumentException
 {
@@ -18,5 +19,9 @@ public class ReflectException extends IllegalArgumentException
 
 	public ReflectException(String fieldName, Object object, long value) {
 		super("Failed to write field " + fieldName + " in object of type " + Reflect.getClassSimpleName(object) + " with value " + value);
+	}
+
+	public ReflectException(String message) {
+		super(message);
 	}
 }
