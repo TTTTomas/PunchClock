@@ -1,24 +1,28 @@
 package se.kingharvest.infrastructure.property;
 
 import java.lang.ref.ReferenceQueue;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 
-public abstract class Property<T> implements IProperty<T> {
-
-	private static final long serialVersionUID = 1760400741734504549L;
-
-	transient private HashSet<IPropertyListener<T>> _listeners = new HashSet<IPropertyListener<T>>();
+public abstract class Event<T> implements IEvent<T>{
 	
-	@SuppressWarnings("rawtypes")
-	transient private ReferenceQueue<?> _referenceQueue = new ReferenceQueue();
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1003399080904653328L;
+
+
+	private List<IPropertyListener<T>> _listeners = new ArrayList<IPropertyListener<T>>();
+	
+	private ReferenceQueue<?> _referenceQueue;
 	
 	T _value;
 	
 	public void set(T value){
 		_value = value;
 		expungeReferences();
-		for (IPropertyListener<T> listener : _listeners) {
-			listener.propertyChanged(value);
+		for (int i=0; i<_listeners.size(); i++) {
+			_listeners.get(i).propertyChanged(value);
 		}
 	}
 	

@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import se.kingharvest.infrastructure.reflection.MethodReflect;
 import se.kingharvest.infrastructure.ui.annotation.OnClickAnnotation;
 import se.kingharvest.infrastructure.ui.ex.ButtonEx;
+import se.kingharvest.infrastructure.ui.ex.ListViewEx;
 import se.kingharvest.infrastructure.ui.ex.SpinnerEx;
 import se.kingharvest.infrastructure.ui.ex.TextViewEx;
 import se.kingharvest.infrastructure.ui.ex.ViewEx;
@@ -12,6 +13,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -62,6 +64,18 @@ public class LayoutBinder {
 	public static SpinnerEx getSpinner(Activity from, int id)
 	{
 		SpinnerEx view = SpinnerEx.getInstance().set(from, (Spinner)from.findViewById(id));
+		return view;
+	}
+
+	public static ListViewEx getListView(Activity from, int id)
+	{
+		ListViewEx view = ListViewEx.getInstance().set(from, (ListView)from.findViewById(id));
+		return view;
+	}
+
+	public static ListViewEx getListView(Dialog from, int id)
+	{
+		ListViewEx view = ListViewEx.getInstance().set(from.getContext(), (ListView)from.findViewById(id));
 		return view;
 	}
 

@@ -5,16 +5,15 @@ import java.lang.ref.WeakReference;
 
 import se.kingharvest.infrastructure.property.IPropertyListener;
 import se.kingharvest.infrastructure.property.Property;
-import se.kingharvest.infrastructure.system.Strings;
-import android.widget.TextView;
+import android.view.View;
 
 /**
- * A property listener that sets the property value as setText() on a text view.
+ * A property listener that sets the property boolean value as setEnabled() on a view.
  * @author tomasb
  *
  * @param <T>
  */
-public class PropertyTextListener<T> extends WeakReference<TextView> implements IPropertyListener<T> {
+public class PropertyEnabledListener extends WeakReference<View> implements IPropertyListener<Boolean> {
 	
 	/**
 	 * Creates the listener, adds it to the property, updates the view with the current property value.
@@ -22,18 +21,16 @@ public class PropertyTextListener<T> extends WeakReference<TextView> implements 
 	 * @param property
 	 */
 	@SuppressWarnings("unchecked")
-	public PropertyTextListener(TextView view, Property<T> property)
+	public PropertyEnabledListener(View view, Property<Boolean> property)
 	{
-		super(view, (ReferenceQueue<TextView>) property.getReferenceQueue());
+		super(view, (ReferenceQueue<View>) property.getReferenceQueue());
 		property.addListener(this);
 		propertyChanged(property.get());
 	}
 
-	public void propertyChanged(T value) {
-		TextView v = get();
+	public void propertyChanged(Boolean value) {
+		View v = get();
 		if(v != null)
-		{
-			v.setText(Strings.nullToEmpty(value));
-		}
+			v.setEnabled(Boolean.TRUE.equals(value));
 	}
 }

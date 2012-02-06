@@ -1,12 +1,12 @@
 package se.kingharvest.infrastructure.model;
 
-public interface IView<VM extends IViewModel<?>> {
+public interface IView<VM extends IViewModel/*<?>*/> {
 
 	VM createViewModel();
 	
-	VM getViewModel();
+	//VM getViewModel();
 	
-	void setViewModel(VM viewModel);
+	//void setViewModel(VM viewModel);
 	
     public void bindView();
 

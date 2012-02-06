@@ -16,7 +16,7 @@ public class NewProjectDialog extends DialogBase
 
 	OnNewProjectOkListener _listener;
 	
-	public NewProjectDialog(ActivityBase<?, ?> context) {
+	public NewProjectDialog(ActivityBase<?> context) {
 		super(context);
 		
 		bindView();

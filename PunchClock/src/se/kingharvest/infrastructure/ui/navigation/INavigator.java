@@ -10,5 +10,7 @@ public interface INavigator {
 
 	void finishWithResult(int result);
 
-	<A extends Activity, A1> void navigateTo(Class<A> targetClass, int targetMethod, A1 arg1);
+	<A extends Activity> void navigateTo(Class<A> targetClass, int targetMethod, Object ... args);
+	
+//	<A extends Activity, A1> void navigateTo(Class<A> targetClass, int targetMethod, A1 arg1);
 }

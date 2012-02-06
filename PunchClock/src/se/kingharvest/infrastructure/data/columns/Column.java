@@ -15,7 +15,7 @@ public class Column {
 		Fourth
 	}
 
-	public final String Name;
+	private final String Name;
 	public final Class<?> Type;
 	public final int Ordinal;
 	public final Order Order;
@@ -39,10 +39,16 @@ public class Column {
 		IsPrimaryIdColumn = type.equals(PrimaryId.class);
 	}
 	
+	public String getName() {
+		if (!IsPrimaryIdColumn)
+			return Name;
+		return "_id";
+	}
+
 	public String toString()
 	{
-		String indexStr = IsPrimaryIdColumn ? SQLiteHelper.getIndexString(Name, true, Ordinal) : "";
-		String str = Name + " " + SQLiteHelper.toSqliteType(Type) + (TextUtils.isEmpty(indexStr) ? "" : " " + indexStr);
+		String indexStr = IsPrimaryIdColumn ? SQLiteHelper.getIndexString(getName(), true, Ordinal) : "";
+		String str = getName() + " " + SQLiteHelper.toSqliteType(Type) + (TextUtils.isEmpty(indexStr) ? "" : " " + indexStr);
 		return str;
 	}
 }

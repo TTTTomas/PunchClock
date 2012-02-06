@@ -20,6 +20,15 @@
 	android:layout_width="fill_parent" 
 	android:layout_height="wrap_content"
 	
+	android:layout_above="@+id/Punchclock_EntriesButton"
+	/>
+
+<Button 
+	android:text="Entries" 
+	android:id="@+id/Punchclock_EntriesButton" 
+	android:layout_width="fill_parent" 
+	android:layout_height="wrap_content"
+	
 	android:layout_alignParentBottom="true"
 	/>
 	

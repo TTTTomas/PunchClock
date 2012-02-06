@@ -2,6 +2,7 @@ package se.kingharvest.infrastructure.reflection;
 
 import java.lang.reflect.Field;
 import java.util.Date;
+import java.util.HashMap;
 
 import se.kingharvest.infrastructure.collection.HashMapMap;
 import se.kingharvest.infrastructure.data.types.Id;
@@ -19,7 +20,23 @@ import se.kingharvest.infrastructure.system.Types;
  */
 public class FieldReflect {
 
+	private static HashMap<Class<?>, Field[]> _fieldsCache;
+	
 	private static HashMapMap<Class<?>, String, Field> _fieldCache;
+
+	public static Field[] getFields(Class<?> type) {
+
+		if(_fieldsCache == null)
+			_fieldsCache = new HashMap<Class<?>, Field[]>();
+		else
+			if(_fieldsCache.containsKey(type))
+				return _fieldsCache.get(type);
+		
+		Field[] fields = type.getFields();
+		_fieldsCache.put(type, fields);
+		return fields;
+	}
+	
 	public static Field getField(String fieldName, Object object)
 	{
 		Class<?> type = object.getClass();
@@ -279,5 +296,4 @@ public class FieldReflect {
 			throw new ReflectException(fieldName, object, e);
 		}		
 	}
-
 }

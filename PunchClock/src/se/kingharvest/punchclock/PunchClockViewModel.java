@@ -2,6 +2,7 @@ package se.kingharvest.punchclock;
 
 import se.kingharvest.infrastructure.android.ParcelableCreator;
 import se.kingharvest.infrastructure.model.ViewModelBase;
+import se.kingharvest.infrastructure.property.BooleanProperty;
 import se.kingharvest.infrastructure.property.StringProperty;
 import se.kingharvest.infrastructure.time.TimeSpan;
 import se.kingharvest.punchclock.data.handlers.ProjectHandler;
@@ -10,8 +11,13 @@ import se.kingharvest.punchclock.entity.Project;
 import se.kingharvest.punchclock.entity.WorkPeriod;
 import android.os.Parcelable;
 
-public class PunchClockViewModel extends ViewModelBase<PunchClockActivity, PunchClockViewModel>
+public class PunchClockViewModel extends ViewModelBase</*PunchClockActivity,*/ PunchClockViewModel>
 {
+	public interface IPunchClockDialogService
+	{
+		void showAskForJob();
+	}
+	
 	public enum PunchClockState
 	{
 		Start,
@@ -20,12 +26,20 @@ public class PunchClockViewModel extends ViewModelBase<PunchClockActivity, Punch
 	
 	private static final long serialVersionUID = 241804889221796408L;
 
-	public StringProperty StatusText = new StringProperty();
+	public StringProperty		StartButtonText = new StringProperty();
+	public BooleanProperty		StartButtonEnabled = new BooleanProperty();
+	
+	public StringProperty		BreakButtonText = new StringProperty();
+	public BooleanProperty		BreakButtonEnabled = new BooleanProperty();
 
+	public StringProperty		StatusText = new StringProperty();
+
+	transient private IPunchClockDialogService _dialogService;
+	
 	private Project _currentProject;
 	
-	public PunchClockViewModel(PunchClockActivity view) {
-    	super(view);
+	public PunchClockViewModel(IPunchClockDialogService dialogService) {
+		_dialogService = dialogService;
     	updateState();
 	}
     
@@ -34,12 +48,12 @@ public class PunchClockViewModel extends ViewModelBase<PunchClockActivity, Punch
 		WorkPeriod periodInProgress = PunchHandler.getPeriodInProgress();
 		if(periodInProgress == null)
 		{
-	    	_view.setState(PunchClockState.Stop);
+			setState(PunchClockState.Stop);
 		}
 		else
 		{
 			_currentProject = ProjectHandler.getProject(periodInProgress.ProjectId);
-	    	_view.setState(PunchClockState.Start);
+			setState(PunchClockState.Start);
 		}			
 	}
 	
@@ -55,7 +69,7 @@ public class PunchClockViewModel extends ViewModelBase<PunchClockActivity, Punch
 		if(_currentProject == null)
 		{
 			StatusText.set("");
-			_view.askForJob();
+			_dialogService.showAskForJob();
 			return;
 		}
 		
@@ -84,6 +98,20 @@ public class PunchClockViewModel extends ViewModelBase<PunchClockActivity, Punch
 		StatusText.set("Take a break: " + new TimeSpan(projectInProgress.BreakTime));
 	}
 
+	private void setState(PunchClockState state) {
+		
+		switch (state) {
+		case Start:
+			StartButtonText.set("Stop");
+			BreakButtonEnabled.set(Boolean.TRUE);
+			break;
+
+		case Stop:
+			StartButtonText.set("Start");
+			BreakButtonEnabled.set(Boolean.FALSE);
+			break;
+		}
+	}	
 
 
 	public static final Parcelable.Creator<PunchClockViewModel> CREATOR = new ParcelableCreator<PunchClockViewModel>(PunchClockViewModel.class).getSerializingCreator();

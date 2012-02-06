@@ -31,7 +31,7 @@ public class Table<E extends EntityBase> implements ITable<E>{
 		_entityType = (Class<E>) Reflect.getGenericType(getClass());
 		_database = database;
 		_columns = ColumnHelper.getColumnsFromEntityType(_entityType);
-		IdColumn = _columns.PrimaryIdColumn.Name;
+		IdColumn = _columns.PrimaryIdColumn.getName();
 	}
 	
 	public boolean tableExists()
@@ -81,6 +81,12 @@ public class Table<E extends EntityBase> implements ITable<E>{
 		}
 		cursor.close();
 		return entities;
+	}
+
+	public Cursor cursorSelectAll() {
+		
+		Cursor cursor = SQLiteHelper.selectAll(_database.getReadableDatabase(), _columns, TableName);
+		return cursor;
 	}
 
 	public int delete(long id) {

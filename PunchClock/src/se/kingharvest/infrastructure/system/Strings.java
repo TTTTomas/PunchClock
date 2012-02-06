@@ -1,5 +1,7 @@
 package se.kingharvest.infrastructure.system;
 
+import android.text.TextUtils;
+
 
 public class Strings {
 
@@ -48,5 +50,24 @@ public class Strings {
 //			}
 		}
 		return removed;
+	}
+
+	/**
+	 * Parses a string as a boolean. "TRUE", "true" or any integer value greater than zero are parsed as true.
+	 */
+	public static boolean toBoolean(String value) {
+		if (TextUtils.isDigitsOnly(value))
+			return Integer.parseInt(value) >= 1;
+		else
+			return value.toLowerCase().equals(Boolean.TRUE.toString());
+		
+		// else, the string value is not representable as a boolean, and false is returned above.
+	}
+	
+	public static String nullToEmpty(Object object)
+	{
+		if(object == null)
+			return "";
+		return String.valueOf(object);
 	}
 }

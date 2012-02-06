@@ -1,6 +1,7 @@
 package se.kingharvest.infrastructure.data.sqlite;
 
 import se.kingharvest.infrastructure.data.columns.ColumnCollection;
+import se.kingharvest.infrastructure.diagnostics.Logger;
 import se.kingharvest.infrastructure.entity.IEntity;
 import se.kingharvest.infrastructure.system.Strings;
 import se.kingharvest.infrastructure.system.Types;
@@ -11,10 +12,13 @@ import android.text.TextUtils;
 
 public class SQLiteHelper {
 	
+	private static final String LOG_TAG = "SQLiteHelper";
+
 	public static <E extends IEntity> void createTable(SQLiteDatabase database, String tableName, ColumnCollection<E> columns)
 	{
 		//String idColumnSql = getIndexString("IdColumn", 0);
 		String sql = "CREATE TABLE " + tableName + " (" + columns.getColumnsAsString() + ")";
+		Logger.debug(LOG_TAG, "Create table: " + sql);
 		database.execSQL(sql);
 	}
 	
@@ -66,20 +70,20 @@ public class SQLiteHelper {
 	}
 
 	public static <E extends IEntity> Cursor selectById(SQLiteDatabase database, ColumnCollection<E> columns, long id, String tableName) {
-		Cursor c = database.query(tableName, columns.getColumnNames(), columns.PrimaryIdColumn.Name + "=?", new String[]{ String.valueOf(id) }, null, null, columns.getSortedColumnsAsString());
+		Cursor c = database.query(tableName, columns.getColumnNames(), columns.PrimaryIdColumn.getName() + "=?", new String[]{ String.valueOf(id) }, null, null, columns.getSortedColumnsAsString());
 		return c;
 	}
 	
 	public static <E extends IEntity> SQLiteStatement createUpdateStatement(SQLiteDatabase database, ColumnCollection<E> columns, String tableName)
 	{
-		String[] columnsWithoutIdColumn = Strings.removeOne(columns.PrimaryIdColumn.Name, columns.getColumnNames());
+		String[] columnsWithoutIdColumn = Strings.removeOne(columns.PrimaryIdColumn.getName(), columns.getColumnNames());
 		
 		String parameters = Strings.join(columnsWithoutIdColumn, "=?, ") + "=?";
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("UPDATE ").append(tableName)
 			.append(" SET ").append(parameters)
-			.append(" WHERE ").append(columns.PrimaryIdColumn.Name).append("=?");
+			.append(" WHERE ").append(columns.PrimaryIdColumn.getName()).append("=?");
 		
 		String sql = sb.toString();
 

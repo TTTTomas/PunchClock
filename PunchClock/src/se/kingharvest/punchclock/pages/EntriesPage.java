@@ -8,18 +8,17 @@ import se.kingharvest.punchclock.R;
 import android.app.Dialog;
 import android.view.View;
 
-public class EntriesPage extends ActivityBase<EntriesPage, EntriesViewModel>{
+public class EntriesPage extends ActivityBase<EntriesViewModel>{
 
 	public static final int SHOW_ENTRIES = 0;
 	public static final int startWithArguments = 1;
-	private static final String LOG_TAG = null;
 	
 	public int getContentView() {
 		return R.layout.entries_page;
 	}
 
 	public EntriesViewModel createViewModel() {
-		return new EntriesViewModel(this);
+		return new EntriesViewModel();
 	}
 
 	public void bindView() {
@@ -28,8 +27,9 @@ public class EntriesPage extends ActivityBase<EntriesPage, EntriesViewModel>{
 	}
 
 	public void bindViewModel() {
-		// TODO Auto-generated method stub
 		
+		getListView(R.id.entries_list)
+			.bindList(_viewModel.WorkPeriodCursorProperty, R.layout.workperiod_item);
 	}
 	
 	int i=2;

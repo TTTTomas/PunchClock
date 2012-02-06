@@ -5,7 +5,7 @@ import android.widget.Spinner;
 public class SpinnerEx extends ViewExBase<Spinner, SpinnerEx> {
 	
     private static final ThreadLocal<SpinnerEx> _instance = new ThreadLocal<SpinnerEx>()
-		{
+    	{
 			@Override 
 			protected SpinnerEx initialValue() {
                 return new SpinnerEx();

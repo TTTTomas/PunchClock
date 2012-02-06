@@ -2,6 +2,7 @@ package se.kingharvest.infrastructure.ui.binding;
 
 import android.view.View;
 import se.kingharvest.infrastructure.ui.ex.ButtonEx;
+import se.kingharvest.infrastructure.ui.ex.ListViewEx;
 import se.kingharvest.infrastructure.ui.ex.SpinnerEx;
 import se.kingharvest.infrastructure.ui.ex.TextViewEx;
 import se.kingharvest.infrastructure.ui.ex.ViewEx;
@@ -14,6 +15,7 @@ public interface ILayoutBinder {
 	TextViewEx getTextView(int id);
 	ButtonEx getButton(int id);
 	SpinnerEx getSpinner(int id);
+	ListViewEx getListView(int id);
 
 	/**
 	 * Returns an OnClickListener calling the method annotated with 

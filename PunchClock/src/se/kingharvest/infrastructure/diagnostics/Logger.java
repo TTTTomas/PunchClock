@@ -8,4 +8,11 @@ public class Logger {
 		Log.i(tag, message);
 	}
 
+	public static void warning(String tag, String message) {
+		Log.w(tag, message);
+	}
+
+	public static void debug(String tag, String message) {
+		Log.d(tag, message);
+	}
 }

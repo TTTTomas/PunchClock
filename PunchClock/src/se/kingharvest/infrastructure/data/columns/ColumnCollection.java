@@ -34,8 +34,8 @@ public class ColumnCollection<E extends IEntity> {
 		for (int i = 0; i < columns.length; i++) {
 			Column c = columns[i];
 			_columnsAsStrings[i] = c.toString();
-			_columnNames[i] = c.Name;
-			ColumnByName.put(c.Name, c);
+			_columnNames[i] = c.getName();
+			ColumnByName.put(c.getName(), c);
 			if(c.IsPrimaryIdColumn)
 			{
 				idColumn = c;
@@ -75,7 +75,7 @@ public class ColumnCollection<E extends IEntity> {
 	{
 		if (_columnNamesWithoutIdColumnAsString == null)
 		{
-			String[] columnsWithoutIdColumn = Strings.removeOne(PrimaryIdColumn.Name, _columnNames);			
+			String[] columnsWithoutIdColumn = Strings.removeOne(PrimaryIdColumn.getName(), _columnNames);			
 			_columnNamesWithoutIdColumnAsString = Strings.join(columnsWithoutIdColumn, ", ");
 		}
 		return _columnNamesWithoutIdColumnAsString;

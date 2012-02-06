@@ -2,6 +2,8 @@ package se.kingharvest.infrastructure.ui.ex;
 
 import java.lang.ref.WeakReference;
 
+import se.kingharvest.infrastructure.property.BooleanProperty;
+import se.kingharvest.infrastructure.ui.ex.property.PropertyEnabledListener;
 import android.content.Context;
 import android.view.View;
 
@@ -47,4 +49,14 @@ public class ViewExBase<V extends View, VEX extends ViewExBase<V, VEX>> {
 			view.setEnabled(enabled);
 		return (VEX) this;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public VEX bindEnabled(BooleanProperty booleanProperty)
+	{
+		View view = _view.get();
+		if(view != null)
+			new PropertyEnabledListener(view, booleanProperty);
+		return (VEX) this;
+	}
+	
 }

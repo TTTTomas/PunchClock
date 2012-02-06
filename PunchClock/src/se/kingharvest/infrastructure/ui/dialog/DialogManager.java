@@ -6,6 +6,7 @@ import java.util.concurrent.CountDownLatch;
 
 import se.kingharvest.infrastructure.property.BooleanProperty;
 import se.kingharvest.infrastructure.reflection.MethodReflect;
+import se.kingharvest.infrastructure.ui.DialogBase;
 import se.kingharvest.infrastructure.ui.annotation.OnCreateDialogAnnotation;
 import android.app.Activity;
 import android.app.Dialog;
@@ -13,7 +14,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.os.Bundle;
 
-public class DialogManager {
+public class DialogManager<VM> {
 
 	protected Activity _activity;
 	
@@ -26,22 +27,28 @@ public class DialogManager {
     private static final String SE_KINGHARVEST_DIALOGMANAGER_DIALOG = "SE_KINGHARVEST_DIALOGMANAGER_DIALOG_";
     private static final String SE_KINGHARVEST_DIALOGMANAGER_SAVED_DIALOGS_TAG = "SE_KINGHARVEST_DIALOGMANAGER_DIALOGS_TAG";
 
-    private Set<Dialog> _managedDialogs;
+    private Set<DialogBase<?>> _managedDialogs;
     
     /**
      * Add a dialog to the managed collection, prepare it, and show it.
      * @param dialog
      */
-    public void showDialog(Dialog dialog)
+    public void showDialog(DialogBase<?> dialog)
     {
         if (_managedDialogs == null) {
-        	_managedDialogs = new HashSet<Dialog>();
+        	_managedDialogs = new HashSet<DialogBase<?>>();
         }
 
         _managedDialogs.add(dialog);
         
         MethodReflect.call(_activity, "prepareDialog", dialog);
 		dialog.show();
+    }
+
+    
+    public void closeDialog()
+    {
+    	
     }
 
     /**
@@ -101,13 +108,13 @@ public class DialogManager {
         }
 
         final int numDialogs = b.getInt(SE_KINGHARVEST_DIALOGMANAGER_NR_OF_DIALOGS, 0);
-        _managedDialogs = new HashSet<Dialog>(numDialogs);
+        _managedDialogs = new HashSet<DialogBase<?>>(numDialogs);
         for (int i = 0; i < numDialogs; i++) {
             Bundle dialogState = b.getBundle(SE_KINGHARVEST_DIALOGMANAGER_DIALOG + i);
             if (dialogState != null) {
                 // Calling onRestoreInstanceState() below will invoke dispatchOnCreate
                 // so tell createDialog() not to do it, otherwise we get an exception
-                final Dialog dialog = createDialog(dialogState);
+                final DialogBase<?> dialog = createDialog(dialogState);
                 _managedDialogs.add(dialog);
                 MethodReflect.call(_activity, "prepareDialog", dialog);
                 dialog.onRestoreInstanceState(dialogState);
@@ -115,14 +122,14 @@ public class DialogManager {
         }
     }
 
-    private Dialog createDialog(Bundle state) {
+    private DialogBase<?> createDialog(Bundle state) {
     	Class<?> t;
     	//state.putSerializable("class", t);
     	// Create using annotations and reflection..
     	
     	int dialogId = 0;
     	Class<?> returnType = null;
-        final Dialog dialog;// = onCreateDialog(dialogId);
+        final DialogBase<?> dialog;// = onCreateDialog(dialogId);
         
         OnCreateDialogAnnotation.getInstance().getAnnotatedMethod(_activity, returnType);
         

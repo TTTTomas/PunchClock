@@ -3,25 +3,22 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:orientation="vertical"
   android:layout_width="fill_parent"
-  android:layout_height="fill_parent">
+  android:layout_height="wrap_content"
+  android:padding="5dp">
 
-	<ListView
-	  android:id="@+android:id/entries_list"
-	  android:layout_width="fill_parent"
-	  android:layout_height="fill_parent" >
-	</ListView>
-    
     <TextView 
-    	android:text="TextView" 
-    	android:id="@+id/entries_text" 
+    	android:text="25" 
+    	android:id="@+id/ProjectId" 
     	android:layout_width="wrap_content" 
     	android:layout_height="wrap_content"
     	/>
-    <Button 
-    	android:text="Button" 
-    	android:id="@+id/entries_go_back" 
+
+    <TextView 
+    	android:text="2012-04-12" 
+    	android:textSize="10dp"
+    	android:id="@+id/StartDate" 
     	android:layout_width="wrap_content" 
     	android:layout_height="wrap_content"
     	/>
-    
+
 </LinearLayout>

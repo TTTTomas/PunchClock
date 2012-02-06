@@ -5,25 +5,25 @@ import java.io.Serializable;
 import se.kingharvest.infrastructure.diagnostics.Logger;
 import android.os.Parcel;
 
-public class ViewModelBase<V extends IView<?>, VM extends IViewModel<?>> implements IViewModel<V>, Serializable{
+public class ViewModelBase</*V extends IView<?>, */VM extends IViewModel/*<?>*/> implements IViewModel/*<V>*/, Serializable{
 
 	private static final long serialVersionUID = 6461370234548566685L;
 	private final String LOG_TAG = getClass().getSimpleName();
 
-	transient protected V _view;
+//	transient protected V _view;
 	
 //    @SuppressWarnings("unchecked")
 //	protected ViewModelBase(Parcel in) {
 //    	this((T)in.readSerializable());
 //    }
 
-    public ViewModelBase(V view) {
-    	setView(view);
+    public ViewModelBase(/*V view*/) {
+//    	setView(view);
 	}
     
-    public void setView(V view){
-    	_view = view;
-    }
+//    public void setView(V view){
+//    	_view = view;
+//    }
 
 //    public ViewModelBase(T other) {
 //	}
